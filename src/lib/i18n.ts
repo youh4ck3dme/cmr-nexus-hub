@@ -1,0 +1,67 @@
+// Slovak-default UI strings for CMR Central. English keys can be added later.
+export const sk = {
+  app: {
+    name: "CMR Central",
+    tagline: "Centrálny operačný systém",
+  },
+  nav: {
+    dashboard: "Dashboard",
+    crm: "CRM",
+    import: "Import Leadov",
+    projects: "Projekty",
+    repos: "GitHub",
+    deployments: "Vercel",
+    wordpress: "WordPress",
+    messages: "Správy",
+    automations: "Automatizácie",
+    logs: "Logy",
+    settings: "Nastavenia",
+    menu: "Menu",
+  },
+  common: {
+    search: "Hľadať…",
+    save: "Uložiť",
+    cancel: "Zrušiť",
+    delete: "Zmazať",
+    confirm: "Potvrdiť",
+    open: "Otvoriť",
+    empty: "Žiadne dáta",
+    loading: "Načítavam…",
+    status: "Stav",
+    all: "Všetky",
+    today: "Dnes",
+    yesterday: "Včera",
+    draft: "Koncept",
+    mock: "Mock",
+    configured: "Nastavené",
+    missing: "Chýba",
+    connect: "Pripojiť",
+  },
+  leadStatus: {
+    new: "Nový",
+    approved: "Schválený",
+    rejected: "Zamietnutý",
+    contacted: "Kontaktovaný",
+    follow_up_due: "Follow-up",
+    replied: "Odpovedal",
+    won: "Vyhraný",
+    lost: "Stratený",
+  },
+  scoreLabel: {
+    KEEP: "KEEP",
+    BORDERLINE: "BORDERLINE",
+    REJECTED: "REJECTED",
+  },
+  projectStatus: {
+    idea: "Nápad",
+    planned: "Plánované",
+    active: "Aktívne",
+    paused: "Pozastavené",
+    shipped: "Nasadené",
+    maintenance: "Údržba",
+    archived: "Archivované",
+  },
+};
+
+export type Dict = typeof sk;
+export const t = sk;
