@@ -9,11 +9,54 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WordpressRouteImport } from './routes/wordpress'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ReposRouteImport } from './routes/repos'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as LogsRouteImport } from './routes/logs'
+import { Route as DeploymentsRouteImport } from './routes/deployments'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CrmRouteImport } from './routes/crm'
+import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsImportRouteImport } from './routes/leads.import'
 
+const WordpressRoute = WordpressRouteImport.update({
+  id: '/wordpress',
+  path: '/wordpress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReposRoute = ReposRouteImport.update({
+  id: '/repos',
+  path: '/repos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogsRoute = LogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeploymentsRoute = DeploymentsRouteImport.update({
+  id: '/deployments',
+  path: '/deployments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -22,6 +65,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const CrmRoute = CrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AutomationsRoute = AutomationsRouteImport.update({
+  id: '/automations',
+  path: '/automations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,40 +85,158 @@ const LeadsImportRoute = LeadsImportRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/automations': typeof AutomationsRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/deployments': typeof DeploymentsRoute
+  '/logs': typeof LogsRoute
+  '/messages': typeof MessagesRoute
+  '/projects': typeof ProjectsRoute
+  '/repos': typeof ReposRoute
+  '/settings': typeof SettingsRoute
+  '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/automations': typeof AutomationsRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/deployments': typeof DeploymentsRoute
+  '/logs': typeof LogsRoute
+  '/messages': typeof MessagesRoute
+  '/projects': typeof ProjectsRoute
+  '/repos': typeof ReposRoute
+  '/settings': typeof SettingsRoute
+  '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/automations': typeof AutomationsRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/deployments': typeof DeploymentsRoute
+  '/logs': typeof LogsRoute
+  '/messages': typeof MessagesRoute
+  '/projects': typeof ProjectsRoute
+  '/repos': typeof ReposRoute
+  '/settings': typeof SettingsRoute
+  '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/crm' | '/dashboard' | '/leads/import'
+  fullPaths:
+    | '/'
+    | '/automations'
+    | '/crm'
+    | '/dashboard'
+    | '/deployments'
+    | '/logs'
+    | '/messages'
+    | '/projects'
+    | '/repos'
+    | '/settings'
+    | '/wordpress'
+    | '/leads/import'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/crm' | '/dashboard' | '/leads/import'
-  id: '__root__' | '/' | '/crm' | '/dashboard' | '/leads/import'
+  to:
+    | '/'
+    | '/automations'
+    | '/crm'
+    | '/dashboard'
+    | '/deployments'
+    | '/logs'
+    | '/messages'
+    | '/projects'
+    | '/repos'
+    | '/settings'
+    | '/wordpress'
+    | '/leads/import'
+  id:
+    | '__root__'
+    | '/'
+    | '/automations'
+    | '/crm'
+    | '/dashboard'
+    | '/deployments'
+    | '/logs'
+    | '/messages'
+    | '/projects'
+    | '/repos'
+    | '/settings'
+    | '/wordpress'
+    | '/leads/import'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AutomationsRoute: typeof AutomationsRoute
   CrmRoute: typeof CrmRoute
   DashboardRoute: typeof DashboardRoute
+  DeploymentsRoute: typeof DeploymentsRoute
+  LogsRoute: typeof LogsRoute
+  MessagesRoute: typeof MessagesRoute
+  ProjectsRoute: typeof ProjectsRoute
+  ReposRoute: typeof ReposRoute
+  SettingsRoute: typeof SettingsRoute
+  WordpressRoute: typeof WordpressRoute
   LeadsImportRoute: typeof LeadsImportRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wordpress': {
+      id: '/wordpress'
+      path: '/wordpress'
+      fullPath: '/wordpress'
+      preLoaderRoute: typeof WordpressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/repos': {
+      id: '/repos'
+      path: '/repos'
+      fullPath: '/repos'
+      preLoaderRoute: typeof ReposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logs': {
+      id: '/logs'
+      path: '/logs'
+      fullPath: '/logs'
+      preLoaderRoute: typeof LogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/deployments': {
+      id: '/deployments'
+      path: '/deployments'
+      fullPath: '/deployments'
+      preLoaderRoute: typeof DeploymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -83,6 +249,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/crm'
       preLoaderRoute: typeof CrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/automations': {
+      id: '/automations'
+      path: '/automations'
+      fullPath: '/automations'
+      preLoaderRoute: typeof AutomationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,8 +277,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AutomationsRoute: AutomationsRoute,
   CrmRoute: CrmRoute,
   DashboardRoute: DashboardRoute,
+  DeploymentsRoute: DeploymentsRoute,
+  LogsRoute: LogsRoute,
+  MessagesRoute: MessagesRoute,
+  ProjectsRoute: ProjectsRoute,
+  ReposRoute: ReposRoute,
+  SettingsRoute: SettingsRoute,
+  WordpressRoute: WordpressRoute,
   LeadsImportRoute: LeadsImportRoute,
 }
 export const routeTree = rootRouteImport
