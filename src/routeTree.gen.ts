@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CrmRouteImport } from './routes/crm'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LeadsImportRouteImport } from './routes/leads.import'
 
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
@@ -28,35 +29,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeadsImportRoute = LeadsImportRouteImport.update({
+  id: '/leads/import',
+  path: '/leads/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/leads/import': typeof LeadsImportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/leads/import': typeof LeadsImportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/leads/import': typeof LeadsImportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/crm' | '/dashboard'
+  fullPaths: '/' | '/crm' | '/dashboard' | '/leads/import'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/crm' | '/dashboard'
-  id: '__root__' | '/' | '/crm' | '/dashboard'
+  to: '/' | '/crm' | '/dashboard' | '/leads/import'
+  id: '__root__' | '/' | '/crm' | '/dashboard' | '/leads/import'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CrmRoute: typeof CrmRoute
   DashboardRoute: typeof DashboardRoute
+  LeadsImportRoute: typeof LeadsImportRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leads/import': {
+      id: '/leads/import'
+      path: '/leads/import'
+      fullPath: '/leads/import'
+      preLoaderRoute: typeof LeadsImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CrmRoute: CrmRoute,
   DashboardRoute: DashboardRoute,
+  LeadsImportRoute: LeadsImportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
