@@ -12,6 +12,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { RobotParallax } from "@/components/robot-parallax";
 import {
   PageHeader,
   StatCard,
@@ -45,6 +46,7 @@ function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <RobotParallax />
       <PageHeader
         title="Dashboard"
         description="Prehľad denných leadov, projektov a stavu konektorov."
