@@ -13,7 +13,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "../lib/store";
 import { AppShell } from "../components/app-shell";
 import { AuthProvider, useAuth } from "../lib/auth-context";
-import { useRouterState, Navigate } from "@tanstack/react-router";
+import { useRouterState, Navigate, Outlet } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -182,16 +182,9 @@ function AuthGate() {
 }
 
 function AppShellUnauthed() {
-  // Renders only the Outlet (auth route) without the CMR shell chrome.
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <RouterOutletOnly />
+      <Outlet />
     </div>
   );
-}
-
-function RouterOutletOnly() {
-  // Lazy import so we don't add another top-level import if not needed.
-  const { Outlet } = require("@tanstack/react-router") as typeof import("@tanstack/react-router");
-  return <Outlet />;
 }
