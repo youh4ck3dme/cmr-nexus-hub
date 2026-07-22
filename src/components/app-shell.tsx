@@ -17,10 +17,12 @@ import {
   Moon,
   Sun,
   Command,
+  LogOut,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
 import { t } from "@/lib/i18n";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -53,6 +55,7 @@ const MOBILE_PRIMARY: NavItem[] = [
 export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useStore();
+  const { user, signOut } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const isActive = (to: string) =>
@@ -121,6 +124,11 @@ export function AppShell() {
               </span>
             </div>
             <div className="ml-auto flex items-center gap-2">
+              {user && (
+                <span className="hidden sm:inline text-xs text-muted-foreground max-w-[180px] truncate">
+                  {user.email}
+                </span>
+              )}
               <button
                 type="button"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -128,6 +136,15 @@ export function AppShell() {
                 aria-label="Prepnúť tému"
               >
                 {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => void signOut()}
+                className="grid h-9 w-9 place-items-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                aria-label="Odhlásiť"
+                title="Odhlásiť"
+              >
+                <LogOut className="h-4 w-4" />
               </button>
             </div>
           </header>

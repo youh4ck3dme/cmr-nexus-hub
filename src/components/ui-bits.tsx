@@ -179,12 +179,16 @@ export function BtnGhost({
   className,
   as,
   href,
+  type = "button",
+  disabled,
 }: {
   children: ReactNode;
   onClick?: () => void;
   className?: string;
   as?: "a";
   href?: string;
+  type?: "button" | "submit";
+  disabled?: boolean;
 }) {
   const cls = cn(
     "inline-flex items-center justify-center gap-2 rounded-md border border-border bg-transparent px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
@@ -198,7 +202,7 @@ export function BtnGhost({
     );
   }
   return (
-    <button type="button" onClick={onClick} className={cls}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cn(cls, "disabled:opacity-50")}>
       {children}
     </button>
   );

@@ -1,82 +1,123 @@
-## Cieľ
-Z nahraného obrázka (roboto-grafiti.webp) vygenerovať kompletnú sadu PWA / app ikon pre CMR Central a zapojiť ich do aplikácie ako inštalovateľnú PWA (manifest-only, bez service workera – v Lovable preview by inak robil problémy). Na úvodnej / splash obrazovke pridať "luxury 4D parallax" prezentáciu robota.
+# CMR Central – Blueprint na plné sfunkčnenie
 
-## Čo sa vygeneruje (assets)
+## Aktuálny stav (čo reálne funguje vs. nefunguje)
 
-Zdroj: `user-uploads://roboto-grafiti.webp` → cez `imagegen--edit_image` sa pripraví štvorcová verzia (robot centrovaný, čistý okraj) a maskovateľná verzia (safe-zone padding pre Android adaptive icons).
+**Funguje (UI vrstva):**
+- Routing, dark shell, sidebar/bottom-nav, PWA ikony, manifest, parallax hero
+- Všetky stránky sa renderujú z **in-memory demo dát** (`src/lib/demo-data.ts`)
+- Parsery Base44 reportov a iMessage intake (čisto klientské)
 
-Uložené do `public/icons/` + pointery cez `lovable-assets` kde má zmysel (veľké PNG). Favicony do rootu `public/`.
+**Nefunguje (nikdy nebolo naozaj zapojené):**
+1. **Perzistencia** – všetko žije v `useState` v `StoreProvider`. Refresh = strata dát. Žiadna DB.
+2. **Autentifikácia** – žiadny login, žiadne role, každý má prístup ku všetkému.
+3. **CRM zápisy** – `addLead/updateLead/addReport` menia len RAM.
+4. **Import Base44 reportov** – parser beží, ale výsledok sa nikam neuloží natrvalo.
+5. **GitHub konektor** – žiadne volanie, `repos` sú demo dáta.
+6. **Vercel konektor** – `deployments` sú demo, žiadny webhook, žiadne API.
+7. **WordPress konektor** – tabuľka len zobrazuje mock; žiadne `/wp-json` volanie.
+8. **Messages / iMessage intake** – žiadny endpoint pre Apple Shortcut webhook.
+9. **Automations** – toggle prepína len farbu badge; žiadny scheduler, žiadny beh.
+10. **Logs** – statické demo, nič sa doň nezapisuje.
+11. **Settings → ENV** – checklist ukazuje natvrdo „chýba" pre všetky kľúče, neoveruje realitu.
+12. **SEO/head na leaf routes** – väčšina stránok má len `title`, chýba description/OG/twitter.
+13. **`beforeLoad` redirect na `/`** – funguje, ale znamená že `/` nemá vlastný obsah/SEO.
 
-Favicon / web:
-- `public/favicon.ico` (multi-size 16/32/48) – nahradí default Lovable
-- `public/favicon-16.png`, `favicon-32.png`, `favicon-48.png`
-- `public/icons/icon.svg` (monochrome-friendly maskovaná verzia pre `mask-icon`)
+---
 
-Apple / iPhone / iPad:
-- `apple-touch-icon.png` 180×180 (primárna)
-- `apple-touch-icon-152.png` (iPad), `-167.png` (iPad Pro), `-120.png` (iPhone @2x)
-- `apple-splash-*` (voliteľné, 2–3 najčastejšie iPhone rozlíšenia: 1290×2796, 1170×2532, 828×1792) – tmavé pozadie, robot v strede
+## Blueprint – jeden veľký krok, ktorý všetko sfunkční
 
-Android / PWA:
-- `icons/icon-192.png`, `icon-512.png` (any)
-- `icons/maskable-192.png`, `icons/maskable-512.png` (purpose: maskable, so safe zone)
-- `icons/icon-96.png`, `icon-144.png` (staršie Android launchery)
+### Fáza A – Backend fundament (Lovable Cloud + Auth)
+1. Zapnúť **Lovable Cloud**.
+2. Migrácia so schémou + RLS + GRANT-mi pre všetky domény:
+   - `profiles`, `user_roles` (+ enum `app_role`, `has_role()` SECURITY DEFINER)
+   - `clients`, `leads`, `lead_reports`, `follow_ups`
+   - `projects`, `repos`, `deployments`, `wordpress_sites`
+   - `message_intakes`, `automations`, `automation_logs`
+   - `connectors` (status/metadata, NIE tajomstvá)
+   - Deterministické seed INSERTy z `demo-data.ts` v tej istej migrácii.
+3. **Auth**: email+password + Google. Route gate `src/routes/_authenticated/` presunúť pod ňu všetky chránené stránky. `/auth` login screen. `/` → redirect na `/dashboard` len ak prihlásený, inak `/auth`.
+4. **RLS pravidlá**: authenticated user vidí len svoje záznamy (owner_id = auth.uid()); admin (`has_role`) vidí všetko.
 
-Microsoft:
-- `icons/mstile-150.png`, `browserconfig.xml`
+### Fáza B – Store → DB
+5. Prepísať `src/lib/store.tsx` z RAM na **TanStack Query** hooky (loader pattern: `ensureQueryData` + `useSuspenseQuery`) volajúce `createServerFn` s `requireSupabaseAuth`.
+6. Server functions v `src/lib/*.functions.ts`:
+   - `listLeads`, `createLead`, `updateLead`, `importBase44Report`
+   - `listProjects`, `listRepos`, `listDeployments`, `listWordPressSites`
+   - `listMessages`, `createMessageIntake`
+   - `listAutomations`, `toggleAutomation`, `listLogs`
+   - `listConnectors`, `getConnectorHealth`
+7. Mutácie robia `queryClient.invalidateQueries` → UI sa refreshuje bez reloadu.
 
-Manifest:
-- `public/manifest.webmanifest` – name "CMR Central", short_name "CMR", theme_color zladené s dark tokenmi (`--background`), background_color, display `standalone`, icons array so `sizes`/`type`/`purpose`, `start_url: "/"`, `scope: "/"`, `lang: "sk"`.
+### Fáza C – Reálne konektory (App connectors cez `standard_connectors--connect`)
+8. **GitHub** connector → server fn `syncRepos()` ťahá repo/commits do `repos` tabuľky.
+9. **Vercel** connector → server fn `syncDeployments()` + verejný route `/api/public/vercel-webhook` (HMAC verify) pre real-time updates.
+10. **WordPress** connector → `syncWordPressSites()` cez `/wp-json/wp/v2` (health, verzia, počet postov).
+11. **Slack/Email** (voliteľné) pre follow-up notifikácie.
+12. `connectors` tabuľka drží live status (`healthy|degraded|down|missing_env`) namiesto mock hodnôt v Settings.
 
-## Zapojenie do aplikácie
+### Fáza D – Verejné webhooky
+13. `src/routes/api/public/base44-webhook.ts` – prijme JSON report, HMAC verify (`BASE44_WEBHOOK_SECRET`), vloží do `lead_reports` + rozparsuje leady.
+14. `src/routes/api/public/imessage-intake.ts` – pre Apple Shortcut, token-based auth (`CRM_AUTH_TOKEN` header), zápis do `message_intakes`.
+15. Oba secrety cez `generate_secret` / `add_secret`.
 
-`src/routes/__root.tsx` – v `head().links` a `meta`:
-- `<link rel="icon" href="/favicon.ico">` (nahradiť existujúci)
-- `<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">` a 16
-- `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">` + varianty
-- `<link rel="mask-icon" href="/icons/icon.svg" color="...">`
-- `<link rel="manifest" href="/manifest.webmanifest">`
-- `<meta name="theme-color" content="...">` (dark hodnota z tokenu)
-- `<meta name="apple-mobile-web-app-capable" content="yes">`
-- `<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">`
-- `<meta name="apple-mobile-web-app-title" content="CMR">`
-- `<meta name="application-name" content="CMR Central">`
-- `<meta name="msapplication-TileColor">` + `TileImage`
+### Fáza E – Automatizácie reálne
+16. Tabuľka `automations` má `schedule_cron`. Cez **pg_cron** volať `/api/public/run-automation?id=…` (stable URL). Zápis do `automation_logs`.
+17. Toggle v UI reálne zapne/vypne cron job (server fn s admin RPC).
 
-Zmazať staré `public/favicon.ico` (default) a nahradiť novým.
+### Fáza F – SEO, PWA polish, bezpečnosť
+18. Každá leaf route dostane vlastný `head()` s title/description/og:title/og:description/twitter:card.
+19. `src/routes/index.tsx` – nechať redirect, ale pridať vlastný `/` landing pre nelogovaných (marketing + „Sign in") s OG obrázkom.
+20. Spustiť `security--run_security_scan` po dokončení, opraviť findings.
+21. Doplniť memory súbory: `mem://features/auth`, `mem://features/connectors`, `mem://index.md`.
 
-Podľa PWA skillu **nepridávame** `vite-plugin-pwa`, service worker, ani inštalačné promptovanie – užívateľ nežiadal offline, len ikony + PWA metadata (manifest-only home-screen support). Inštalovateľné to bude (Android Chrome install prompt, iOS "Add to Home Screen").
+### Fáza G – Verifikácia
+22. Build check, TS check, dev server sanity.
+23. Playwright: login → dashboard → import Base44 report → verify lead sa objaví po refreshi → toggle automation → logs zapíše záznam.
+24. Screenshoty desktop + mobile (420px).
 
-## Luxury 4D parallax
+---
 
-Nová komponenta `src/components/robot-parallax.tsx` – umiestnená na dashboard hero / prihlasovacej ploche (podľa toho čo je landing = aktuálne `/` = dashboard):
+## Technické detaily
 
-- Vrstvy (z odvodených variantov obrázka cez `imagegen--edit_image`):
-  1. pozadie – rozmazané graffiti steny (blur, tmavý overlay)
-  2. midground – farebné splashe / lebky
-  3. foreground – samotný robot (s jemným glow okolo očí)
-  4. glare / noise overlay – jemný film grain + radial highlight
+**Nové súbory (výber):**
+```
+supabase/migrations/<ts>_init_cmr_schema.sql
+src/routes/_authenticated/route.tsx          (auth gate)
+src/routes/_authenticated/dashboard.tsx      (presun)
+src/routes/_authenticated/{crm,projects,...}.tsx
+src/routes/auth.tsx
+src/routes/api/public/base44-webhook.ts
+src/routes/api/public/imessage-intake.ts
+src/routes/api/public/vercel-webhook.ts
+src/routes/api/public/run-automation.ts
+src/lib/leads.functions.ts
+src/lib/projects.functions.ts
+src/lib/connectors.functions.ts
+src/lib/automations.functions.ts
+src/lib/queries.ts                           (queryOptions factory)
+```
 
-- 4D efekt: mouse-move + device-orientation (`deviceorientation` event pre mobil) → každá vrstva sa posúva iným `translate3d` a mierne `rotateX/Y` (perspective 1200px na wrapperi). Rozsah tlmený `spring` (framer-motion, ak už je v projekte; inak čistý `requestAnimationFrame` s lerp – žiadna nová dependencia).
-- Reduced-motion: `prefers-reduced-motion: reduce` → parallax vypnutý, ostane statický render.
-- Performance: vrstvy `will-change: transform`, `pointer-events-none`, lazy mount (IntersectionObserver), aby nespomalilo scroll na mobile.
-- Umiestnenie: hero blok na `/dashboard` (a/alebo `/` redirect target), výška `~40vh` na mobile, `~55vh` na desktop, zaoblený radius, jemný ring `--border`.
+**Zmenené:**
+```
+src/lib/store.tsx                            (mount len UI stav: theme; ostatné cez Query)
+src/routes/__root.tsx                        (auth listener, session provider)
+src/routes/index.tsx                         (podmienený redirect)
+src/routes/*                                 (presun pod _authenticated + vlastné head())
+```
 
-## Technické poznámky
+**Zmazané:** žiadne — `demo-data.ts` sa použije ako zdroj seedov v migrácii, potom môže zostať pre offline dev.
 
-- Ikony generujem cez `imagegen--edit_image` s cieľovými rozmermi (napr. 512×512 zdroj → `sharp`-like downscale robí `imagegen`). Pre presné veľkosti < 512 (favicon 32/16) sa vyrenderuje 512 a klientsky sa nič nedeje – prehliadač si škáluje; kritické veľkosti (180, 192, 512, 1024) sa generujú natívne.
-- `favicon.ico` vytvorím z 32/48 PNG cez `code--exec` (ImageMagick / `png-to-ico` cez `bunx`).
-- Veľké splash / hero varianty (>200 kB) idú cez `lovable-assets` pointer a použijú sa v parallax komponente ako `<img src={asset.url}>`. Malé ikony (`<50 kB`) ostávajú priamo v `public/` (musia byť servované z rootu pre PWA konvenciu).
-- Manifest ikony musia byť skutočné súbory v `public/`, nie `lovable-assets` URL (inštalátory ich ťahajú relatívne k origin scope).
-- `theme_color` v manifeste = konkrétna hex hodnota zodpovedajúca `--background` v dark móde (`.dark`), lebo manifest CSS premenné nečíta.
+**Konektory (volania):** `standard_connectors--list_app_connectors` → `--connect` pre `github`, `vercel`, `wordpress`. Secrets sa injektujú do `process.env` na serveri; nikdy do klienta.
 
-## Deliverables checklist
+**Bezpečnosť:**
+- Roly cez `user_roles` + `has_role()` (nikdy nie na `profiles`).
+- Webhooky: HMAC + `timingSafeEqual`.
+- Žiadny `supabaseAdmin` mimo verifikovaných serverových operácií.
+- Zod validácia každého vstupu server fn / verejného route.
 
-1. Sada favicon / apple-touch / android / maskable / mstile PNG + `favicon.ico` v `public/`.
-2. `public/manifest.webmanifest` + `public/browserconfig.xml`.
-3. Aktualizovaný `src/routes/__root.tsx` (linky, meta, theme-color, manifest, apple metadata).
-4. Zmazaný default `public/favicon.ico`.
-5. Nová `RobotParallax` komponenta + integrácia na dashboard hero.
-6. Reduced-motion fallback + mobilný gyroscope parallax.
+---
 
-Nezasahuje do business logiky, CRM, connectorov ani store — čisto assets + head + jedna prezentačná komponenta.
+## Prečo „na jeden krát" reálne funguje
+Všetky zmeny sú **aditívne** okrem prepisu `store.tsx` a presunu route súborov pod `_authenticated/`. Migrácia + server fns + auth gate sú nezávislé bloky, ktoré sa dajú vygenerovať paralelne. Konektory sa dajú zapojiť postupne — kým konektor nie je nalinkovaný, príslušný `sync*` vracia `missing_env` a UI to zobrazí (namiesto pádu).
+
+Po odsúhlasení pokračujem v build móde v uvedenom poradí Fáz A→G.

@@ -12,6 +12,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "../lib/store";
 import { AppShell } from "../components/app-shell";
+import { AuthProvider, useAuth } from "../lib/auth-context";
+import { useRouterState, Navigate, Outlet } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -149,9 +151,40 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <AppShell />
-      </StoreProvider>
+      <AuthProvider>
+        <StoreProvider>
+          <AuthGate />
+        </StoreProvider>
+      </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function AuthGate() {
+  const { session, loading } = useAuth();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (loading) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
+        Načítavam…
+      </div>
+    );
+  }
+
+  if (!session) {
+    if (pathname === "/auth") return <AppShellUnauthed />;
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (pathname === "/auth") return <Navigate to="/dashboard" replace />;
+  return <AppShell />;
+}
+
+function AppShellUnauthed() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Outlet />
+    </div>
   );
 }
