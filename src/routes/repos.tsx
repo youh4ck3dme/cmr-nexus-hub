@@ -43,12 +43,13 @@ function ReposPage() {
       <PageHeader
         title="GitHub repozitáre"
         description="Server-side connector – GITHUB_TOKEN nie je nikdy v prehliadači."
-      >
-        <BtnGhost onClick={onSync} disabled={syncing}>
-          <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
-          {syncing ? "Sync…" : "Sync now"}
-        </BtnGhost>
-      </PageHeader>
+        actions={
+          <BtnGhost onClick={onSync} disabled={syncing}>
+            <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Sync…" : "Sync now"}
+          </BtnGhost>
+        }
+      />
       {msg && (
         <Card className="p-3 text-xs text-muted-foreground">{msg}</Card>
       )}
