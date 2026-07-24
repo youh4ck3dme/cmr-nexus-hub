@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Github, ExternalLink, GitPullRequest, CircleDot } from "lucide-react";
+import { Github, ExternalLink, GitPullRequest, CircleDot, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@/lib/store";
+import { syncRepos } from "@/lib/sync.functions";
 import {
   BtnGhost,
   Card,
@@ -15,14 +18,41 @@ export const Route = createFileRoute("/repos")({
 });
 
 function ReposPage() {
-  const { repos, connectors } = useStore();
+  const { repos, connectors, reload } = useStore();
   const gh = connectors.find((c) => c.provider === "github");
+  const runSync = useServerFn(syncRepos);
+  const [syncing, setSyncing] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  async function onSync() {
+    setSyncing(true);
+    setMsg(null);
+    try {
+      const res = await runSync();
+      await reload();
+      setMsg(res.ok ? `Synced ${res.count} repos` : (res.reason ?? "Sync failed"));
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <PageHeader
         title="GitHub repozitáre"
         description="Server-side connector – GITHUB_TOKEN nie je nikdy v prehliadači."
+        actions={
+          <BtnGhost onClick={onSync} disabled={syncing}>
+            <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Sync…" : "Sync now"}
+          </BtnGhost>
+        }
       />
+      {msg && (
+        <Card className="p-3 text-xs text-muted-foreground">{msg}</Card>
+      )}
       {gh && gh.status !== "connected" && (
         <Card className="border-warning/40 bg-warning/10 p-3 text-sm flex items-center justify-between gap-2">
           <div>

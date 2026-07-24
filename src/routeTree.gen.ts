@@ -22,6 +22,9 @@ import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsImportRouteImport } from './routes/leads.import'
+import { Route as ApiPublicHooksVercelRouteImport } from './routes/api/public/hooks/vercel'
+import { Route as ApiPublicHooksImessageRouteImport } from './routes/api/public/hooks/imessage'
+import { Route as ApiPublicHooksBase44RouteImport } from './routes/api/public/hooks/base44'
 
 const WordpressRoute = WordpressRouteImport.update({
   id: '/wordpress',
@@ -88,6 +91,21 @@ const LeadsImportRoute = LeadsImportRouteImport.update({
   path: '/leads/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksVercelRoute = ApiPublicHooksVercelRouteImport.update({
+  id: '/api/public/hooks/vercel',
+  path: '/api/public/hooks/vercel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksImessageRoute = ApiPublicHooksImessageRouteImport.update({
+  id: '/api/public/hooks/imessage',
+  path: '/api/public/hooks/imessage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksBase44Route = ApiPublicHooksBase44RouteImport.update({
+  id: '/api/public/hooks/base44',
+  path: '/api/public/hooks/base44',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,6 +121,9 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
+  '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
+  '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
+  '/api/public/hooks/vercel': typeof ApiPublicHooksVercelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,6 +139,9 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
+  '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
+  '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
+  '/api/public/hooks/vercel': typeof ApiPublicHooksVercelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,6 +158,9 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
+  '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
+  '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
+  '/api/public/hooks/vercel': typeof ApiPublicHooksVercelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,6 +178,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wordpress'
     | '/leads/import'
+    | '/api/public/hooks/base44'
+    | '/api/public/hooks/imessage'
+    | '/api/public/hooks/vercel'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,6 +196,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wordpress'
     | '/leads/import'
+    | '/api/public/hooks/base44'
+    | '/api/public/hooks/imessage'
+    | '/api/public/hooks/vercel'
   id:
     | '__root__'
     | '/'
@@ -181,6 +214,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wordpress'
     | '/leads/import'
+    | '/api/public/hooks/base44'
+    | '/api/public/hooks/imessage'
+    | '/api/public/hooks/vercel'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,6 +233,9 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   WordpressRoute: typeof WordpressRoute
   LeadsImportRoute: typeof LeadsImportRoute
+  ApiPublicHooksBase44Route: typeof ApiPublicHooksBase44Route
+  ApiPublicHooksImessageRoute: typeof ApiPublicHooksImessageRoute
+  ApiPublicHooksVercelRoute: typeof ApiPublicHooksVercelRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -292,6 +331,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/vercel': {
+      id: '/api/public/hooks/vercel'
+      path: '/api/public/hooks/vercel'
+      fullPath: '/api/public/hooks/vercel'
+      preLoaderRoute: typeof ApiPublicHooksVercelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/imessage': {
+      id: '/api/public/hooks/imessage'
+      path: '/api/public/hooks/imessage'
+      fullPath: '/api/public/hooks/imessage'
+      preLoaderRoute: typeof ApiPublicHooksImessageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/base44': {
+      id: '/api/public/hooks/base44'
+      path: '/api/public/hooks/base44'
+      fullPath: '/api/public/hooks/base44'
+      preLoaderRoute: typeof ApiPublicHooksBase44RouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -309,6 +369,9 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   WordpressRoute: WordpressRoute,
   LeadsImportRoute: LeadsImportRoute,
+  ApiPublicHooksBase44Route: ApiPublicHooksBase44Route,
+  ApiPublicHooksImessageRoute: ApiPublicHooksImessageRoute,
+  ApiPublicHooksVercelRoute: ApiPublicHooksVercelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
