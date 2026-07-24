@@ -178,7 +178,7 @@ export const syncWordPress = createServerFn({ method: "POST" })
   });
 
 async function logSync(
-  context: { supabase: { from: (t: string) => { insert: (r: unknown) => Promise<unknown> } }; userId: string },
+  context: { supabase: { from: (t: "automation_logs") => { insert: (r: object) => Promise<unknown> } }; userId: string },
   source: string,
   action: string,
   message: string,
