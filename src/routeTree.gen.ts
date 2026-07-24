@@ -22,6 +22,7 @@ import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsImportRouteImport } from './routes/leads.import'
+import { Route as ApiPublicHooksBase44RouteImport } from './routes/api/public/hooks/base44'
 
 const WordpressRoute = WordpressRouteImport.update({
   id: '/wordpress',
@@ -88,6 +89,11 @@ const LeadsImportRoute = LeadsImportRouteImport.update({
   path: '/leads/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksBase44Route = ApiPublicHooksBase44RouteImport.update({
+  id: '/api/public/hooks/base44',
+  path: '/api/public/hooks/base44',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
+  '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
+  '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
+  '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wordpress'
     | '/leads/import'
+    | '/api/public/hooks/base44'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wordpress'
     | '/leads/import'
+    | '/api/public/hooks/base44'
   id:
     | '__root__'
     | '/'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wordpress'
     | '/leads/import'
+    | '/api/public/hooks/base44'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,6 +209,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   WordpressRoute: typeof WordpressRoute
   LeadsImportRoute: typeof LeadsImportRoute
+  ApiPublicHooksBase44Route: typeof ApiPublicHooksBase44Route
 }
 
 declare module '@tanstack/react-router' {
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/base44': {
+      id: '/api/public/hooks/base44'
+      path: '/api/public/hooks/base44'
+      fullPath: '/api/public/hooks/base44'
+      preLoaderRoute: typeof ApiPublicHooksBase44RouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -309,6 +329,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   WordpressRoute: WordpressRoute,
   LeadsImportRoute: LeadsImportRoute,
+  ApiPublicHooksBase44Route: ApiPublicHooksBase44Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

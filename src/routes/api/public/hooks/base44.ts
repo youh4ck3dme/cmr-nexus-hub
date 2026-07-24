@@ -42,13 +42,13 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
         if (repErr) return new Response(`DB: ${repErr.message}`, { status: 500 });
 
         if (parsed.leads.length > 0) {
-          const rows = parsed.leads.map(({ id, ...l }) => ({
-            ...l,
-            source_report_id: report.id,
-            owner_id: payload.owner_id!,
-          }));
-          void id;
-          const { error } = await supabaseAdmin.from("leads").insert(rows);
+          const rows = parsed.leads.map((l) => {
+            const { id: _id, ...rest } = l;
+            void _id;
+            return { ...rest, source_report_id: report.id, owner_id: payload.owner_id! };
+          });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await supabaseAdmin.from("leads").insert(rows as any);
           if (error) return new Response(`DB: ${error.message}`, { status: 500 });
         }
 
@@ -62,7 +62,3 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
     },
   },
 });
-
-// eslint suppress: unused destructured id
-let id: unknown;
-void id;
