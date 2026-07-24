@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Rocket } from "lucide-react";
+import { ExternalLink, Rocket, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@/lib/store";
+import { syncDeployments } from "@/lib/sync.functions";
 import {
   BtnGhost,
   Card,
@@ -15,15 +18,38 @@ export const Route = createFileRoute("/deployments")({
 });
 
 function DeploymentsPage() {
-  const { deployments, connectors, projects } = useStore();
+  const { deployments, connectors, projects, reload } = useStore();
   const vc = connectors.find((c) => c.provider === "vercel");
   const projectName = (id?: string) => projects.find((p) => p.id === id)?.name ?? "—";
+  const runSync = useServerFn(syncDeployments);
+  const [syncing, setSyncing] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  async function onSync() {
+    setSyncing(true);
+    setMsg(null);
+    try {
+      const res = await runSync();
+      await reload();
+      setMsg(res.ok ? `Synced ${res.count} deployments` : (res.reason ?? "Sync failed"));
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
   return (
     <div className="space-y-4">
       <PageHeader
         title="Vercel deployments"
         description="Server-side connector – VERCEL_TOKEN nikdy nie v prehliadači."
+        actions={
+          <BtnGhost onClick={onSync} disabled={syncing}>
+            <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Sync…" : "Sync now"}
+          </BtnGhost>
+        }
       />
+      {msg && <Card className="p-3 text-xs text-muted-foreground">{msg}</Card>}
       {vc && vc.status !== "connected" && (
         <Card className="border-warning/40 bg-warning/10 p-3 text-sm">
           <b>Mock režim.</b> Doplň <code>VERCEL_TOKEN</code> pre reálne sťahovanie stavu.
