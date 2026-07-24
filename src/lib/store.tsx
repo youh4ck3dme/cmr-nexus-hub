@@ -67,6 +67,7 @@ interface StoreApi extends StoreState {
   addLog: (l: AutomationLog) => void;
   toggleAutomation: (id: string) => void;
   setTheme: (t: "dark" | "light") => void;
+  reload: () => Promise<void>;
 }
 
 const StoreCtx = createContext<StoreApi | null>(null);
@@ -341,6 +342,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, theme }));
   }, []);
 
+  const reload = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const loaded = await hydrate(userId);
+      setState((s) => ({ ...s, ...loaded }));
+    } catch (err) {
+      console.error("[store] reload failed", err);
+    }
+  }, [userId]);
+
   const api = useMemo<StoreApi>(
     () => ({
       ...state,
@@ -355,6 +366,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addLog,
       toggleAutomation,
       setTheme,
+      reload,
     }),
     [
       state,
@@ -369,6 +381,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addLog,
       toggleAutomation,
       setTheme,
+      reload,
     ],
   );
 
