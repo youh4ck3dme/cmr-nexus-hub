@@ -177,12 +177,8 @@ export const syncWordPress = createServerFn({ method: "POST" })
     return { ok: true, count: 1 };
   });
 
-async function logSync(
-  context: { supabase: { from: (t: "automation_logs") => { insert: (r: object) => Promise<unknown> } }; userId: string },
-  source: string,
-  action: string,
-  message: string,
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function logSync(context: any, source: string, action: string, message: string) {
   await context.supabase.from("automation_logs").insert({
     owner_id: context.userId,
     source,
