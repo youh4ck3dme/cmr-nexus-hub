@@ -22,6 +22,7 @@ import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsImportRouteImport } from './routes/leads.import'
+import { Route as ApiPublicHooksImessageRouteImport } from './routes/api/public/hooks/imessage'
 import { Route as ApiPublicHooksBase44RouteImport } from './routes/api/public/hooks/base44'
 
 const WordpressRoute = WordpressRouteImport.update({
@@ -89,6 +90,11 @@ const LeadsImportRoute = LeadsImportRouteImport.update({
   path: '/leads/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksImessageRoute = ApiPublicHooksImessageRouteImport.update({
+  id: '/api/public/hooks/imessage',
+  path: '/api/public/hooks/imessage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksBase44Route = ApiPublicHooksBase44RouteImport.update({
   id: '/api/public/hooks/base44',
   path: '/api/public/hooks/base44',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
   '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
+  '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
   '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
+  '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/wordpress': typeof WordpressRoute
   '/leads/import': typeof LeadsImportRoute
   '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
+  '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/leads/import'
     | '/api/public/hooks/base44'
+    | '/api/public/hooks/imessage'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/leads/import'
     | '/api/public/hooks/base44'
+    | '/api/public/hooks/imessage'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/leads/import'
     | '/api/public/hooks/base44'
+    | '/api/public/hooks/imessage'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   WordpressRoute: typeof WordpressRoute
   LeadsImportRoute: typeof LeadsImportRoute
   ApiPublicHooksBase44Route: typeof ApiPublicHooksBase44Route
+  ApiPublicHooksImessageRoute: typeof ApiPublicHooksImessageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/imessage': {
+      id: '/api/public/hooks/imessage'
+      path: '/api/public/hooks/imessage'
+      fullPath: '/api/public/hooks/imessage'
+      preLoaderRoute: typeof ApiPublicHooksImessageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/base44': {
       id: '/api/public/hooks/base44'
       path: '/api/public/hooks/base44'
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   WordpressRoute: WordpressRoute,
   LeadsImportRoute: LeadsImportRoute,
   ApiPublicHooksBase44Route: ApiPublicHooksBase44Route,
+  ApiPublicHooksImessageRoute: ApiPublicHooksImessageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
