@@ -36,7 +36,8 @@ export const Route = createFileRoute("/api/public/hooks/vercel")({
           action: event.type ?? "webhook",
           status: "info",
           message: `Vercel event ${event.type ?? "?"} for ${event.payload?.project?.name ?? "?"}`,
-          metadata: event as unknown as Record<string, unknown>,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            metadata: event as any,
         });
 
         return Response.json({ ok: true });

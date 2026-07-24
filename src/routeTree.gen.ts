@@ -22,6 +22,7 @@ import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsImportRouteImport } from './routes/leads.import'
+import { Route as ApiPublicHooksVercelRouteImport } from './routes/api/public/hooks/vercel'
 import { Route as ApiPublicHooksImessageRouteImport } from './routes/api/public/hooks/imessage'
 import { Route as ApiPublicHooksBase44RouteImport } from './routes/api/public/hooks/base44'
 
@@ -90,6 +91,11 @@ const LeadsImportRoute = LeadsImportRouteImport.update({
   path: '/leads/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksVercelRoute = ApiPublicHooksVercelRouteImport.update({
+  id: '/api/public/hooks/vercel',
+  path: '/api/public/hooks/vercel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksImessageRoute = ApiPublicHooksImessageRouteImport.update({
   id: '/api/public/hooks/imessage',
   path: '/api/public/hooks/imessage',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/leads/import': typeof LeadsImportRoute
   '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
   '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
+  '/api/public/hooks/vercel': typeof ApiPublicHooksVercelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/leads/import': typeof LeadsImportRoute
   '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
   '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
+  '/api/public/hooks/vercel': typeof ApiPublicHooksVercelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/leads/import': typeof LeadsImportRoute
   '/api/public/hooks/base44': typeof ApiPublicHooksBase44Route
   '/api/public/hooks/imessage': typeof ApiPublicHooksImessageRoute
+  '/api/public/hooks/vercel': typeof ApiPublicHooksVercelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/leads/import'
     | '/api/public/hooks/base44'
     | '/api/public/hooks/imessage'
+    | '/api/public/hooks/vercel'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/leads/import'
     | '/api/public/hooks/base44'
     | '/api/public/hooks/imessage'
+    | '/api/public/hooks/vercel'
   id:
     | '__root__'
     | '/'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/leads/import'
     | '/api/public/hooks/base44'
     | '/api/public/hooks/imessage'
+    | '/api/public/hooks/vercel'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   LeadsImportRoute: typeof LeadsImportRoute
   ApiPublicHooksBase44Route: typeof ApiPublicHooksBase44Route
   ApiPublicHooksImessageRoute: typeof ApiPublicHooksImessageRoute
+  ApiPublicHooksVercelRoute: typeof ApiPublicHooksVercelRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -318,6 +331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/vercel': {
+      id: '/api/public/hooks/vercel'
+      path: '/api/public/hooks/vercel'
+      fullPath: '/api/public/hooks/vercel'
+      preLoaderRoute: typeof ApiPublicHooksVercelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/imessage': {
       id: '/api/public/hooks/imessage'
       path: '/api/public/hooks/imessage'
@@ -351,6 +371,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeadsImportRoute: LeadsImportRoute,
   ApiPublicHooksBase44Route: ApiPublicHooksBase44Route,
   ApiPublicHooksImessageRoute: ApiPublicHooksImessageRoute,
+  ApiPublicHooksVercelRoute: ApiPublicHooksVercelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
