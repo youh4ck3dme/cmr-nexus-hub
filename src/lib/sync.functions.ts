@@ -33,25 +33,63 @@ async function gatewayFetch(
 
 // ---------- GitHub ----------
 
-export const syncRepos = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const key = process.env.GITHUB_API_KEY;
-    if (!key) return { ok: false, reason: "GitHub connector not linked", count: 0 };
+function githubConnectionKey(): string | null {
+  const k = process.env.GITHUB_API_KEY || process.env.GITHUB_TOKEN;
+  return k && k.trim() ? k.trim() : null;
+}
 
+type GhRepo = {
+  id: number;
+  name: string;
+  full_name: string;
+  html_url: string;
+  default_branch: string;
+  open_issues_count: number;
+  pushed_at: string;
+};
+
+/** Prefer Lovable gateway when LOVABLE_API_KEY is set; else direct api.github.com. */
+async function fetchGithubRepos(token: string): Promise<{ repos: GhRepo[]; via: string }> {
+  if (process.env.LOVABLE_API_KEY) {
     const repos = (await gatewayFetch(
       "github",
       "/user/repos?per_page=50&sort=updated",
-      key,
-    )) as Array<{
-      id: number;
-      name: string;
-      full_name: string;
-      html_url: string;
-      default_branch: string;
-      open_issues_count: number;
-      pushed_at: string;
-    }>;
+      token,
+    )) as GhRepo[];
+    return { repos, via: "lovable-gateway" };
+  }
+
+  const res = await fetch(
+    "https://api.github.com/user/repos?per_page=50&sort=updated&affiliation=owner,collaborator,organization_member",
+    {
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "cmr-nexus-hub",
+      },
+    },
+  );
+  const body = await res.text();
+  if (!res.ok) {
+    throw new Error(`GitHub API ${res.status}: ${body.slice(0, 300)}`);
+  }
+  return { repos: body ? (JSON.parse(body) as GhRepo[]) : [], via: "github-api" };
+}
+
+export const syncRepos = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const key = githubConnectionKey();
+    if (!key) {
+      return {
+        ok: false,
+        reason: "GitHub connector not linked (set GITHUB_TOKEN or GITHUB_API_KEY)",
+        count: 0,
+      };
+    }
+
+    const { repos, via } = await fetchGithubRepos(key);
 
     const rows = repos.map((r) => ({
       owner_id: context.userId,
@@ -65,7 +103,7 @@ export const syncRepos = createServerFn({ method: "POST" })
       status: "healthy" as const,
     }));
 
-    // Wipe non-mock github rows and reinsert. Keeps store simple.
+    // Wipe github rows and reinsert (demo mock rows included — sync replaces source of truth).
     await context.supabase
       .from("repos")
       .delete()
@@ -75,8 +113,20 @@ export const syncRepos = createServerFn({ method: "POST" })
       const { error } = await context.supabase.from("repos").insert(rows);
       if (error) throw error;
     }
-    await logSync(context, "github", "syncRepos", `Synced ${rows.length} repos`);
-    return { ok: true, count: rows.length };
+
+    // Mark connector connected after successful sync.
+    await context.supabase
+      .from("connectors")
+      .update({
+        status: "connected",
+        last_sync_at: new Date().toISOString(),
+        config_summary: `Synced ${rows.length} repos via ${via}`,
+      })
+      .eq("owner_id", context.userId)
+      .eq("provider", "github");
+
+    await logSync(context, "github", "syncRepos", `Synced ${rows.length} repos via ${via}`);
+    return { ok: true, count: rows.length, via };
   });
 
 // ---------- Vercel (direct token, no gateway) ----------

@@ -38,7 +38,7 @@ function AuthPage() {
     setInfo(null);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -47,10 +47,24 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        setInfo("Účet vytvorený. Ak je zapnutá verifikácia e-mailu, potvrď odkaz v pošte.");
+        if (data.session) {
+          // Email confirm is off — onAuthStateChange will redirect to dashboard.
+          setInfo("Účet vytvorený. Presmerovávam…");
+        } else {
+          setInfo(
+            "Účet vytvorený. Na tomto projekte je zapnutá verifikácia e-mailu — otvor odkaz v pošte a potom sa prihlás. Bez potvrdenia sa nedá dostať do dashboardu.",
+          );
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (error.message?.toLowerCase().includes("email not confirmed")) {
+            throw new Error(
+              "E-mail ešte nie je potvrdený. Skontroluj schránku (aj spam) a klikni na overovací odkaz.",
+            );
+          }
+          throw error;
+        }
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

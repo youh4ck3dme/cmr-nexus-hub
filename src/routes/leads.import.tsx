@@ -49,17 +49,20 @@ function LeadImportPage() {
   const [preview, setPreview] = useState<ParsedReportPreview | null>(null);
   const [imported, setImported] = useState<{ report: string; count: number } | null>(null);
   const [duplicateReport, setDuplicateReport] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
 
   function handlePreview() {
     setImported(null);
     setDuplicateReport(null);
+    setImportError(null);
     if (!raw.trim()) return;
     const p = parseLeadReport(raw);
     setPreview(p);
   }
 
-  function handleImport() {
-    if (!preview) return;
+  async function handleImport() {
+    if (!preview || busy) return;
     if (
       store.reportExists({
         report_number: preview.report.report_number,
@@ -71,40 +74,53 @@ function LeadImportPage() {
       );
       return;
     }
-    const report: LeadReport = {
-      ...preview.report,
-      id: newId("rep"),
-      created_at: new Date().toISOString(),
-    };
 
-    const toImport: Lead[] = [];
-    const duplicates: Lead[] = [];
-    preview.leads.forEach((l) => {
-      const existing = store.leadExists({
-        website: l.website,
-        email: l.email,
-        company_name: l.company_name,
+    setBusy(true);
+    setImportError(null);
+    try {
+      // Reuse parser report id so lead.source_report_id matches the inserted report row.
+      const reportId = preview.leads[0]?.source_report_id ?? newId("rep");
+      const report: LeadReport = {
+        ...preview.report,
+        id: reportId,
+        created_at: new Date().toISOString(),
+      };
+
+      const toImport: Lead[] = [];
+      const duplicates: Lead[] = [];
+      preview.leads.forEach((l) => {
+        const existing = store.leadExists({
+          website: l.website,
+          email: l.email,
+          company_name: l.company_name,
+        });
+        if (existing) {
+          duplicates.push({
+            ...l,
+            warnings: [...l.warnings, "DUPLICATE_OF_" + existing.company_name],
+          });
+        } else {
+          toImport.push({ ...l, source_report_id: report.id, id: l.id || newId("lead") });
+        }
       });
-      if (existing) {
-        duplicates.push({ ...l, warnings: [...l.warnings, "DUPLICATE_OF_" + existing.company_name] });
-      } else {
-        toImport.push({ ...l, source_report_id: report.id });
-      }
-    });
 
-    store.addReport(report);
-    store.addLeads(toImport);
-    store.addLog({
-      id: newId("log"),
-      source: "Import",
-      action: "import.report",
-      status: "success",
-      message: `Importovaný ${report.title}: ${toImport.length} nových, ${duplicates.length} duplicit.`,
-      created_at: new Date().toISOString(),
-    });
-    setImported({ report: report.title, count: toImport.length });
-    setPreview(null);
-    setRaw("");
+      await store.importReport(report, toImport);
+      await store.addLog({
+        id: newId("log"),
+        source: "Import",
+        action: "import.report",
+        status: "success",
+        message: `Importovaný ${report.title}: ${toImport.length} nových, ${duplicates.length} duplicit.`,
+        created_at: new Date().toISOString(),
+      });
+      setImported({ report: report.title, count: toImport.length });
+      setPreview(null);
+      setRaw("");
+    } catch (e) {
+      setImportError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -142,6 +158,15 @@ function LeadImportPage() {
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-warning" />
             {duplicateReport}
+          </div>
+        </Card>
+      )}
+
+      {importError && (
+        <Card className="border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+            Import zlyhal: {importError}
           </div>
         </Card>
       )}
@@ -230,9 +255,11 @@ function LeadImportPage() {
           })}
 
           <div className="sticky bottom-20 z-10 flex justify-end gap-2 lg:bottom-4">
-            <BtnGhost onClick={() => setPreview(null)}>Zrušiť</BtnGhost>
-            <BtnPrimary onClick={handleImport}>
-              Potvrdiť import ({preview.leads.length})
+            <BtnGhost onClick={() => setPreview(null)} disabled={busy}>
+              Zrušiť
+            </BtnGhost>
+            <BtnPrimary onClick={() => void handleImport()} disabled={busy}>
+              {busy ? "Ukladám…" : `Potvrdiť import (${preview.leads.length})`}
             </BtnPrimary>
           </div>
         </div>

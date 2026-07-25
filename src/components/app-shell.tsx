@@ -54,12 +54,20 @@ const MOBILE_PRIMARY: NavItem[] = [
 
 export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { theme, setTheme } = useStore();
+  const { theme, setTheme, hydrated, dbReady, lastError, clearError, connectors } = useStore();
   const { user, signOut } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const isActive = (to: string) =>
     to === "/dashboard" ? pathname === "/dashboard" || pathname === "/" : pathname.startsWith(to);
+
+  const anyConnectorLive = connectors.some((c) => c.status === "connected");
+  const dataLabel = !hydrated
+    ? "načítavam…"
+    : dbReady
+      ? "Supabase · live"
+      : "Supabase · chyba";
+  const modeLabel = anyConnectorLive ? "connectors live" : "connectors mock";
 
   return (
     <div
@@ -102,7 +110,7 @@ export function AppShell() {
             })}
           </nav>
           <div className="border-t border-border p-3 text-[11px] text-muted-foreground">
-            v1.0 · mock mode
+            v1.0 · {dataLabel}
           </div>
         </aside>
 
@@ -120,7 +128,7 @@ export function AppShell() {
             <div className="flex min-w-0 items-center gap-2">
               <span className="lg:hidden text-sm font-semibold">{t.app.name}</span>
               <span className="hidden lg:inline text-xs text-muted-foreground">
-                Interné · mock mode
+                Interné · {dataLabel} · {modeLabel}
               </span>
             </div>
             <div className="ml-auto flex items-center gap-2">
@@ -150,6 +158,20 @@ export function AppShell() {
           </header>
 
           <main className="min-w-0 flex-1 px-3 pb-24 pt-4 lg:px-6 lg:pb-8">
+            {lastError && (
+              <div className="mb-4 flex items-start justify-between gap-3 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                <span className="min-w-0 break-words">
+                  <b>DB / store:</b> {lastError}
+                </span>
+                <button
+                  type="button"
+                  onClick={clearError}
+                  className="shrink-0 underline"
+                >
+                  Zavrieť
+                </button>
+              </div>
+            )}
             <Outlet />
           </main>
         </div>

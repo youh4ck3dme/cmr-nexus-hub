@@ -29,6 +29,13 @@ export const Route = createFileRoute("/api/public/hooks/imessage")({
           return new Response("Missing owner_id or raw_text", { status: 400 });
         }
 
+        if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+          return new Response(
+            "Not configured: SUPABASE_SERVICE_ROLE_KEY required for webhook inserts",
+            { status: 503 },
+          );
+        }
+
         const parsed = parseMessage(payload.raw_text);
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 

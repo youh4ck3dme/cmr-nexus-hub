@@ -1,4 +1,5 @@
 import type { Lead, LeadReport, MessageIntake, ScoreLabel } from "./types";
+import { normalizeDate } from "./db-map";
 import { newId } from "./store";
 
 // Base44 daily lead report parser.
@@ -169,11 +170,15 @@ function parseLeadBlock(block: string, reportId: string): Lead | null {
   };
 }
 
+function normalizeReportDate(raw: string | undefined): string {
+  return normalizeDate(raw ?? "");
+}
+
 export function parseLeadReport(raw: string): ParsedReportPreview {
   const reportId = newId("rep");
   const reportNumber = extractMatch(raw, /(?:DAILY\s+LEAD\s+REPORT|Report)\s*[#]?\s*(\d+)/i);
-  const reportDateMatch = raw.match(/(\d{4}-\d{2}-\d{2})|(\d{2}\/\d{2}\/\d{4})/);
-  const reportDate = reportDateMatch?.[0] ?? new Date().toISOString().slice(0, 10);
+  const reportDateMatch = raw.match(/(\d{4}-\d{2}-\d{2})|(\d{1,2}\/\d{1,2}\/\d{4})/);
+  const reportDate = normalizeReportDate(reportDateMatch?.[0]);
   const title =
     extractMatch(raw, /^(DAILY\s+LEAD\s+REPORT\s*\d+.*|NOV[ÉE]\s+LEADY.*)$/im) ??
     `Report ${reportDate}`;

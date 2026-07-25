@@ -26,7 +26,7 @@ function MessagesPage() {
   const [raw, setRaw] = useState("");
   const [source, setSource] = useState<MessageIntake["source"]>("imessage");
 
-  function handleAdd() {
+  async function handleAdd() {
     if (!raw.trim()) return;
     const parsed = parseMessage(raw);
     const msg: MessageIntake = {
@@ -37,22 +37,31 @@ function MessagesPage() {
       status: "new",
       created_at: new Date().toISOString(),
     };
-    store.addMessage(msg);
-    setRaw("");
+    try {
+      await store.addMessage(msg);
+      setRaw("");
+    } catch {
+      // lastError banner in AppShell
+    }
   }
 
-  function handleConvert(m: MessageIntake) {
+  async function handleConvert(m: MessageIntake) {
     const lead = messageToDraftLead(m);
-    store.addLead(lead);
-    store.updateMessage(m.id, { status: "converted", lead_id: lead.id });
-    store.addLog({
-      id: newId("log"),
-      source: "Message intake",
-      action: "convert.to_lead",
-      status: "success",
-      message: `Správa (${m.source}) skonvertovaná na lead: ${lead.company_name}`,
-      created_at: new Date().toISOString(),
-    });
+    try {
+      // Lead first so message.lead_id FK is valid.
+      await store.addLead(lead);
+      await store.updateMessage(m.id, { status: "converted", lead_id: lead.id });
+      await store.addLog({
+        id: newId("log"),
+        source: "Message intake",
+        action: "convert.to_lead",
+        status: "success",
+        message: `Správa (${m.source}) skonvertovaná na lead: ${lead.company_name}`,
+        created_at: new Date().toISOString(),
+      });
+    } catch {
+      // lastError banner in AppShell
+    }
   }
 
   return (
@@ -82,7 +91,7 @@ function MessagesPage() {
           <div className="text-xs text-muted-foreground">
             iMessage nemôže byť čítaný priamo z weba. Použi Apple Shortcut webhook alebo manuálny paste.
           </div>
-          <BtnPrimary onClick={handleAdd} disabled={!raw.trim()}>
+          <BtnPrimary onClick={() => void handleAdd()} disabled={!raw.trim()}>
             <Wand2 className="h-4 w-4" /> Parsovať &amp; uložiť
           </BtnPrimary>
         </div>
@@ -121,7 +130,7 @@ function MessagesPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {m.status === "new" ? (
-                  <BtnPrimary onClick={() => handleConvert(m)}>
+                  <BtnPrimary onClick={() => void handleConvert(m)}>
                     <ArrowRightCircle className="h-4 w-4" /> Konvertovať na lead
                   </BtnPrimary>
                 ) : (
@@ -129,7 +138,7 @@ function MessagesPage() {
                     <Check className="h-4 w-4" /> Skonvertované
                   </span>
                 )}
-                <BtnGhost onClick={() => store.updateMessage(m.id, { status: "ignored" })}>
+                <BtnGhost onClick={() => void store.updateMessage(m.id, { status: "ignored" })}>
                   Ignorovať
                 </BtnGhost>
               </div>

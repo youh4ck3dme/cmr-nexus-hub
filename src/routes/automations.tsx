@@ -46,7 +46,7 @@ function AutomationsPage() {
                 <div className="text-[11px] text-muted-foreground">
                   {a.last_run ? `Naposledy: ${new Date(a.last_run).toLocaleString("sk-SK")}` : "Nespustené"}
                 </div>
-                <BtnGhost onClick={() => toggleAutomation(a.id)}>
+                <BtnGhost onClick={() => void toggleAutomation(a.id)}>
                   {a.status === "enabled" ? "Vypnúť" : "Zapnúť"}
                 </BtnGhost>
               </div>

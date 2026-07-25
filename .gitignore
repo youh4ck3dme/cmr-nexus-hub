@@ -15,6 +15,10 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+test-results
+playwright-report
+blob-report
+playwright/.cache
 
 # Wrangler / Cloudflare
 .wrangler/
@@ -30,3 +34,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Env / secrets (never commit)
+.env
+.env.*
+!.env.example

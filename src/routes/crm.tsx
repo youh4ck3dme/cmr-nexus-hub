@@ -97,7 +97,9 @@ function CrmPage() {
         <LeadDetailDrawer
           lead={detail}
           onClose={() => setDetailId(null)}
-          onStatusChange={(newStatus) => updateLead(detail.id, { status: newStatus })}
+          onStatusChange={(newStatus) => {
+            void updateLead(detail.id, { status: newStatus });
+          }}
         />
       )}
     </div>
