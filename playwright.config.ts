@@ -16,7 +16,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], channel: "chromium" },
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
   webServer: process.env.PLAYWRIGHT_SKIP_WEBSERVER
