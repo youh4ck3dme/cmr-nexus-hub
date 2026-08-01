@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { parseMessage } from "@/lib/parsers";
+import { imessagePayloadSchema, formatZodIssues } from "@/lib/webhook-schemas";
+import { logWebhookError } from "@/lib/webhook-log.server";
 
 // POST /api/public/hooks/imessage
 // Header: Authorization: Bearer <IMESSAGE_INTAKE_TOKEN>
@@ -19,15 +21,27 @@ export const Route = createFileRoute("/api/public/hooks/imessage")({
         const { timingSafeEqual } = await import("crypto");
         if (!timingSafeEqual(a, b)) return new Response("Unauthorized", { status: 401 });
 
-        let payload: { owner_id?: string; source?: string; raw_text?: string };
+        let json: unknown;
         try {
-          payload = await request.json();
+          json = await request.json();
         } catch {
           return new Response("Invalid JSON", { status: 400 });
         }
-        if (!payload.owner_id || !payload.raw_text) {
-          return new Response("Missing owner_id or raw_text", { status: 400 });
+        const parsedBody = imessagePayloadSchema.safeParse(json);
+        if (!parsedBody.success) {
+          const msg = formatZodIssues(parsedBody.error);
+          await logWebhookError({
+            ownerId:
+              typeof (json as { owner_id?: unknown })?.owner_id === "string"
+                ? (json as { owner_id: string }).owner_id
+                : null,
+            source: "iMessage",
+            action: "intake.message",
+            message: `Invalid payload: ${msg}`,
+          });
+          return new Response(`Invalid payload: ${msg}`, { status: 400 });
         }
+        const payload = parsedBody.data;
 
         if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
           return new Response(
@@ -43,19 +57,22 @@ export const Route = createFileRoute("/api/public/hooks/imessage")({
           .from("message_intakes")
           .insert({
             owner_id: payload.owner_id,
-            source: (payload.source ?? "imessage") as
-              | "imessage"
-              | "sms"
-              | "whatsapp"
-              | "email"
-              | "manual",
+            source: payload.source,
             raw_text: payload.raw_text,
             status: "new",
             ...parsed,
           })
           .select("id")
           .single();
-        if (error) return new Response(`DB: ${error.message}`, { status: 500 });
+        if (error) {
+          await logWebhookError({
+            ownerId: payload.owner_id,
+            source: "iMessage",
+            action: "intake.message",
+            message: `Message insert failed: ${error.message}`,
+          });
+          return new Response(`DB: ${error.message}`, { status: 500 });
+        }
 
         return Response.json({ ok: true, id: data.id, parsed });
       },
