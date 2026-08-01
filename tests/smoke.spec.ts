@@ -75,6 +75,38 @@ Email: play@example.com
     });
     expect([200, 500]).toContain(res.status());
   });
+
+  test("dedupes retried delivery with same event id", async ({ request }) => {
+    const secret = process.env.BASE44_WEBHOOK_SECRET;
+    const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    test.skip(!secret || !service, "Needs BASE44_WEBHOOK_SECRET + SUPABASE_SERVICE_ROLE_KEY");
+    const eventId = `smoke-${Date.now()}`;
+    const body = JSON.stringify({
+      owner_id: process.env.SMOKE_OWNER_ID ?? OWNER,
+      raw: `DAILY LEAD REPORT 997
+Date: 2026-07-26
+
+LEAD 1: Idempotency Co
+Website: idem.example
+Score: 91/100
+Score Label: KEEP
+`,
+    });
+    const headers = {
+      "content-type": "application/json",
+      "x-base44-signature": createHmac("sha256", secret!).update(body).digest("hex"),
+      "x-base44-event-id": eventId,
+    };
+    const first = await request.post("/api/public/hooks/base44", { headers, data: body });
+    test.skip(first.status() !== 200, "first delivery did not succeed");
+    const firstJson = await first.json();
+
+    const second = await request.post("/api/public/hooks/base44", { headers, data: body });
+    expect(second.status()).toBe(200);
+    const secondJson = await second.json();
+    expect(secondJson.duplicate).toBe(true);
+    expect(secondJson.report_id).toBe(firstJson.report_id);
+  });
 });
 
 test.describe("imessage webhook", () => {

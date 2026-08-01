@@ -628,6 +628,39 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events: {
+        Row: {
+          created_at: string
+          event_key: string
+          id: string
+          owner_id: string | null
+          response: Json
+          source: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_key: string
+          id?: string
+          owner_id?: string | null
+          response?: Json
+          source: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_key?: string
+          id?: string
+          owner_id?: string | null
+          response?: Json
+          source?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       wordpress_sites: {
         Row: {
           admin_url: string | null
