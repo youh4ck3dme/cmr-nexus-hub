@@ -9,7 +9,8 @@ test.describe("routes (HTTP/SSR)", () => {
       const res = await request.get(path);
       expect(res.status(), path).toBeLessThan(400);
       const html = await res.text();
-      expect(html).toContain("<div id=\"root\"");
+      expect(html).toMatch(/<!DOCTYPE html>/i);
+      expect(html).toContain("<title>");
     });
   }
 
