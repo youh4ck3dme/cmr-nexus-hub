@@ -92,3 +92,31 @@ Email: play@example.com
     }
   });
 });
+
+test.describe("webhook validation", () => {
+  test("imessage rejects missing bearer token", async ({ request }) => {
+    const res = await request.post("/api/public/hooks/imessage", {
+      data: { owner_id: "00000000-0000-4000-8000-000000000000", raw_text: "hi" },
+    });
+    expect([401, 503]).toContain(res.status());
+  });
+
+  test("base44 returns 400 for invalid payload when signature is valid", async ({ request }) => {
+    const secret = process.env.BASE44_WEBHOOK_SECRET;
+    test.skip(!secret, "BASE44_WEBHOOK_SECRET not set");
+    const body = JSON.stringify({ owner_id: "not-a-uuid", raw: "x" });
+    const sig = createHmac("sha256", secret!).update(body).digest("hex");
+    const res = await request.post("/api/public/hooks/base44", {
+      headers: { "content-type": "application/json", "x-base44-signature": sig },
+      data: body,
+    });
+    expect(res.status()).toBe(400);
+  });
+
+  test("public routes render key pages", async ({ page }) => {
+    for (const path of ["/auth", "/dashboard", "/crm", "/settings"]) {
+      const resp = await page.goto(path);
+      expect(resp?.status(), path).toBeLessThan(500);
+    }
+  });
+});

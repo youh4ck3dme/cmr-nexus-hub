@@ -48,3 +48,31 @@ test("GITHUB_TOKEN alias works for GITHUB_API_KEY", () => {
   const map = getEnvPresenceMap(env);
   expect(map.GITHUB_TOKEN).toBe(true);
 });
+
+test("base44 schema rejects short raw and bad uuid", async () => {
+  const { base44PayloadSchema } = await import("../src/lib/webhook-schemas");
+  expect(base44PayloadSchema.safeParse({ owner_id: "nope", raw: "x" }).success).toBe(false);
+  expect(
+    base44PayloadSchema.safeParse({
+      owner_id: "11111111-1111-4111-8111-111111111111",
+      raw: "DAILY LEAD REPORT 1\nDate: 2026-07-25\n",
+    }).success,
+  ).toBe(true);
+});
+
+test("imessage schema defaults source to imessage", async () => {
+  const { imessagePayloadSchema } = await import("../src/lib/webhook-schemas");
+  const res = imessagePayloadSchema.safeParse({
+    owner_id: "11111111-1111-4111-8111-111111111111",
+    raw_text: "Ahoj, mam zaujem",
+  });
+  expect(res.success).toBe(true);
+  if (res.success) expect(res.data.source).toBe("imessage");
+  expect(
+    imessagePayloadSchema.safeParse({
+      owner_id: "11111111-1111-4111-8111-111111111111",
+      raw_text: "hi",
+      source: "carrier-pigeon",
+    }).success,
+  ).toBe(false);
+});
