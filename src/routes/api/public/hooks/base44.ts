@@ -4,6 +4,13 @@ import { parseLeadReport } from "@/lib/parsers";
 import { verifyHmacSha256Hex } from "@/lib/webhook-crypto";
 import { base44PayloadSchema, formatZodIssues } from "@/lib/webhook-schemas";
 import { logWebhookError } from "@/lib/webhook-log.server";
+import {
+  claimWebhookEvent,
+  completeWebhookEvent,
+  eventIdFromHeaders,
+  eventKeyFor,
+  releaseWebhookEvent,
+} from "@/lib/webhook-idempotency.server";
 import type { Lead, LeadReport } from "@/lib/types";
 
 // POST /api/public/hooks/base44
@@ -54,6 +61,21 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
         const parsed = parseLeadReport(payload.raw);
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+        // --- Idempotency: dedupe retries by event id (or body hash) ---
+        const eventKey = eventKeyFor(
+          eventIdFromHeaders(request.headers, ["x-base44-event-id"]),
+          body,
+        );
+        const claim = await claimWebhookEvent({
+          ownerId: payload.owner_id,
+          source: "Base44",
+          eventKey,
+        });
+        if (claim.kind === "duplicate") {
+          return Response.json({ ...claim.response, ok: true, duplicate: true }, { status: 200 });
+        }
+        const claimId = claim.id;
+
         const reportShell: LeadReport = {
           id: crypto.randomUUID(),
           report_number: parsed.report.report_number,
@@ -73,6 +95,7 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
           .select("id")
           .single();
         if (repErr) {
+          await releaseWebhookEvent(claimId);
           await logWebhookError({
             ownerId: payload.owner_id,
             source: "Base44",
@@ -95,6 +118,7 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
           );
           const { error } = await supabaseAdmin.from("leads").insert(rows as never);
           if (error) {
+            await releaseWebhookEvent(claimId);
             await logWebhookError({
               ownerId: payload.owner_id,
               source: "Base44",
@@ -115,12 +139,14 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
           metadata: { report_id: report.id, warnings: parsed.warnings },
         } as never);
 
-        return Response.json({
+        const result = {
           ok: true,
           report_id: report.id,
           leads: parsed.leads.length,
           warnings: parsed.warnings,
-        });
+        };
+        await completeWebhookEvent(claimId, result);
+        return Response.json(result);
       },
     },
   },
