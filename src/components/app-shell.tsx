@@ -62,11 +62,7 @@ export function AppShell() {
     to === "/dashboard" ? pathname === "/dashboard" || pathname === "/" : pathname.startsWith(to);
 
   const anyConnectorLive = connectors.some((c) => c.status === "connected");
-  const dataLabel = !hydrated
-    ? "načítavam…"
-    : dbReady
-      ? "Supabase · live"
-      : "Supabase · chyba";
+  const dataLabel = !hydrated ? "načítavam…" : dbReady ? "Supabase · live" : "Supabase · chyba";
   const modeLabel = anyConnectorLive ? "connectors live" : "connectors mock";
 
   return (
@@ -163,11 +159,7 @@ export function AppShell() {
                 <span className="min-w-0 break-words">
                   <b>DB / store:</b> {lastError}
                 </span>
-                <button
-                  type="button"
-                  onClick={clearError}
-                  className="shrink-0 underline"
-                >
+                <button type="button" onClick={clearError} className="shrink-0 underline">
                   Zavrieť
                 </button>
               </div>
@@ -226,9 +218,7 @@ export function AppShell() {
                 </div>
                 <div className="min-w-0">
                   <div className="truncate text-sm font-semibold">{t.app.name}</div>
-                  <div className="truncate text-[11px] text-muted-foreground">
-                    {t.app.tagline}
-                  </div>
+                  <div className="truncate text-[11px] text-muted-foreground">{t.app.tagline}</div>
                 </div>
               </div>
               <button

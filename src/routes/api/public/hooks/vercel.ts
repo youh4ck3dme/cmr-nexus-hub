@@ -26,7 +26,10 @@ export const Route = createFileRoute("/api/public/hooks/vercel")({
 
         const event = JSON.parse(body) as {
           type?: string;
-          payload?: { deployment?: { url?: string; meta?: Record<string, string> }; project?: { name?: string } };
+          payload?: {
+            deployment?: { url?: string; meta?: Record<string, string> };
+            project?: { name?: string };
+          };
         };
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -36,8 +39,8 @@ export const Route = createFileRoute("/api/public/hooks/vercel")({
           action: event.type ?? "webhook",
           status: "info",
           message: `Vercel event ${event.type ?? "?"} for ${event.payload?.project?.name ?? "?"}`,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            metadata: event as any,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          metadata: event as any,
         });
 
         return Response.json({ ok: true });

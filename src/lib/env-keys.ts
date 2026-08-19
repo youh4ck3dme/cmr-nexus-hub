@@ -49,9 +49,7 @@ export function isEnvEffectivelyPresent(
   return false;
 }
 
-export function getEnvPresenceMap(
-  env: NodeJS.ProcessEnv = process.env,
-): Record<string, boolean> {
+export function getEnvPresenceMap(env: NodeJS.ProcessEnv = process.env): Record<string, boolean> {
   const out: Record<string, boolean> = {};
   for (const key of TRACKED_ENV_KEYS) {
     out[key] = isEnvEffectivelyPresent(key, env);

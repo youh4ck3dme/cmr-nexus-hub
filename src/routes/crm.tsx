@@ -20,7 +20,14 @@ export const Route = createFileRoute("/crm")({
 });
 
 const STATUSES: LeadStatus[] = [
-  "new", "approved", "rejected", "contacted", "follow_up_due", "replied", "won", "lost",
+  "new",
+  "approved",
+  "rejected",
+  "contacted",
+  "follow_up_due",
+  "replied",
+  "won",
+  "lost",
 ];
 const LABELS: ScoreLabel[] = ["KEEP", "BORDERLINE", "REJECTED"];
 
@@ -47,7 +54,10 @@ function CrmPage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader title="CRM" description={`${leads.length} leadov · ${filtered.length} zobrazených`} />
+      <PageHeader
+        title="CRM"
+        description={`${leads.length} leadov · ${filtered.length} zobrazených`}
+      />
 
       <Card className="p-3">
         <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
@@ -67,7 +77,9 @@ function CrmPage() {
           >
             <option value="all">{t.common.all} statusy</option>
             {STATUSES.map((s) => (
-              <option key={s} value={s}>{t.leadStatus[s]}</option>
+              <option key={s} value={s}>
+                {t.leadStatus[s]}
+              </option>
             ))}
           </select>
           <select
@@ -77,14 +89,19 @@ function CrmPage() {
           >
             <option value="all">{t.common.all} skóre</option>
             {LABELS.map((l) => (
-              <option key={l} value={l}>{l}</option>
+              <option key={l} value={l}>
+                {l}
+              </option>
             ))}
           </select>
         </div>
       </Card>
 
       {filtered.length === 0 ? (
-        <EmptyState title="Žiadne leady" description="Skús zmeniť filtre alebo importovať report." />
+        <EmptyState
+          title="Žiadne leady"
+          description="Skús zmeniť filtre alebo importovať report."
+        />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {filtered.map((l) => (
@@ -108,11 +125,7 @@ function CrmPage() {
 
 function LeadCard({ lead, onOpen }: { lead: Lead; onOpen: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group text-left"
-    >
+    <button type="button" onClick={onOpen} className="group text-left">
       <Card className="p-4 transition-colors group-hover:border-primary/50">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
@@ -121,15 +134,17 @@ function LeadCard({ lead, onOpen }: { lead: Lead; onOpen: () => void }) {
               {[lead.location, lead.country].filter(Boolean).join(" · ") || lead.website || "—"}
             </div>
           </div>
-          <StatusBadge tone={scoreLabelTone(lead.score_label)}>
-            {lead.score_label}
-          </StatusBadge>
+          <StatusBadge tone={scoreLabelTone(lead.score_label)}>{lead.score_label}</StatusBadge>
         </div>
         <div className="mt-3 flex flex-wrap gap-1.5">
           <StatusBadge tone={statusTone(lead.status)}>{t.leadStatus[lead.status]}</StatusBadge>
-          <StatusBadge tone="muted">{lead.score_total}/{lead.score_max}</StatusBadge>
+          <StatusBadge tone="muted">
+            {lead.score_total}/{lead.score_max}
+          </StatusBadge>
           {lead.warnings.slice(0, 2).map((w) => (
-            <StatusBadge key={w} tone="warning">{w}</StatusBadge>
+            <StatusBadge key={w} tone="warning">
+              {w}
+            </StatusBadge>
           ))}
         </div>
         {lead.problem_evidence && (
@@ -158,7 +173,11 @@ function LeadDetailDrawer({
             <div className="truncate text-sm font-semibold">{lead.company_name}</div>
             <div className="text-xs text-muted-foreground">{lead.website ?? "—"}</div>
           </div>
-          <button onClick={onClose} aria-label="Zavrieť" className="grid h-8 w-8 place-items-center rounded-md hover:bg-muted">
+          <button
+            onClick={onClose}
+            aria-label="Zavrieť"
+            className="grid h-8 w-8 place-items-center rounded-md hover:bg-muted"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -179,19 +198,31 @@ function LeadDetailDrawer({
             <Field label="Telefón" value={lead.phone} />
           </div>
 
-          {lead.problem_evidence && <Section title="Problem evidence">{lead.problem_evidence}</Section>}
+          {lead.problem_evidence && (
+            <Section title="Problem evidence">{lead.problem_evidence}</Section>
+          )}
           {lead.trigger_event && <Section title="Trigger event">{lead.trigger_event}</Section>}
           {lead.revenue_impact && <Section title="Revenue impact">{lead.revenue_impact}</Section>}
 
           {lead.decision_makers.length > 0 && (
             <div>
-              <div className="mb-1 text-xs font-semibold uppercase text-muted-foreground">Decision makers</div>
+              <div className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
+                Decision makers
+              </div>
               <ul className="space-y-1 text-sm">
                 {lead.decision_makers.map((d, i) => (
                   <li key={i} className="flex items-center justify-between gap-2">
-                    <span className="truncate">{d.name}{d.role ? ` · ${d.role}` : ""}</span>
+                    <span className="truncate">
+                      {d.name}
+                      {d.role ? ` · ${d.role}` : ""}
+                    </span>
                     {d.linkedin_url && (
-                      <a href={d.linkedin_url} target="_blank" rel="noreferrer" className="text-primary text-xs inline-flex items-center gap-1">
+                      <a
+                        href={d.linkedin_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary text-xs inline-flex items-center gap-1"
+                      >
                         LinkedIn <ExternalLink className="h-3 w-3" />
                       </a>
                     )}
@@ -203,13 +234,26 @@ function LeadDetailDrawer({
 
           {lead.sources.length > 0 && (
             <div>
-              <div className="mb-1 text-xs font-semibold uppercase text-muted-foreground">Zdroje</div>
+              <div className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
+                Zdroje
+              </div>
               <ul className="space-y-1 text-xs">
                 {lead.sources.map((s, i) => (
                   <li key={i} className="text-muted-foreground">
                     • {s.source_text}
                     {s.source_url && (
-                      <> — <a href={s.source_url} target="_blank" rel="noreferrer" className="text-primary underline">link</a></>
+                      <>
+                        {" "}
+                        —{" "}
+                        <a
+                          href={s.source_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline"
+                        >
+                          link
+                        </a>
+                      </>
                     )}
                   </li>
                 ))}
@@ -220,7 +264,9 @@ function LeadDetailDrawer({
           {lead.drafts.length > 0 && (
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <div className="text-xs font-semibold uppercase text-muted-foreground">Outreach drafty</div>
+                <div className="text-xs font-semibold uppercase text-muted-foreground">
+                  Outreach drafty
+                </div>
                 <StatusBadge tone="warning">Neposielané automaticky</StatusBadge>
               </div>
               <div className="space-y-2">
@@ -228,9 +274,13 @@ function LeadDetailDrawer({
                   <Card key={d.id} className="p-3">
                     <div className="mb-1 flex items-center gap-2">
                       <StatusBadge tone="info">{d.channel}</StatusBadge>
-                      {d.subject && <span className="truncate text-xs font-medium">{d.subject}</span>}
+                      {d.subject && (
+                        <span className="truncate text-xs font-medium">{d.subject}</span>
+                      )}
                     </div>
-                    <pre className="whitespace-pre-wrap font-sans text-xs text-muted-foreground">{d.body}</pre>
+                    <pre className="whitespace-pre-wrap font-sans text-xs text-muted-foreground">
+                      {d.body}
+                    </pre>
                     {d.follow_up_message && (
                       <div className="mt-2 text-[11px] text-muted-foreground">
                         Follow-up +{d.follow_up_day ?? 3}d: {d.follow_up_message}
@@ -243,14 +293,18 @@ function LeadDetailDrawer({
           )}
 
           <div>
-            <div className="mb-1 text-xs font-semibold uppercase text-muted-foreground">Zmeniť status</div>
+            <div className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
+              Zmeniť status
+            </div>
             <select
               value={lead.status}
               onChange={(e) => onStatusChange(e.target.value as LeadStatus)}
               className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
             >
               {STATUSES.map((s) => (
-                <option key={s} value={s}>{t.leadStatus[s]}</option>
+                <option key={s} value={s}>
+                  {t.leadStatus[s]}
+                </option>
               ))}
             </select>
           </div>
@@ -267,7 +321,10 @@ function LeadDetailDrawer({
               </BtnGhost>
             )}
             {lead.website && (
-              <BtnGhost as="a" href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}>
+              <BtnGhost
+                as="a"
+                href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}
+              >
                 <ExternalLink className="h-4 w-4" /> Web
               </BtnGhost>
             )}

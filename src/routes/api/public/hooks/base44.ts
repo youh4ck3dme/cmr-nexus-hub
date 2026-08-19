@@ -41,7 +41,7 @@ export const Route = createFileRoute("/api/public/hooks/base44")({
           await logWebhookError({
             ownerId:
               typeof (json as { owner_id?: unknown })?.owner_id === "string"
-                ? ((json as { owner_id: string }).owner_id)
+                ? (json as { owner_id: string }).owner_id
                 : null,
             source: "Base44",
             action: "import.report",

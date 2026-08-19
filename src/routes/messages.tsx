@@ -78,7 +78,11 @@ function MessagesPage() {
             onChange={(e) => setSource(e.target.value as MessageIntake["source"])}
             className="rounded-md border border-border bg-background px-3 py-2 text-sm"
           >
-            {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+            {SOURCES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
           </select>
           <textarea
             value={raw}
@@ -89,7 +93,8 @@ function MessagesPage() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-xs text-muted-foreground">
-            iMessage nemôže byť čítaný priamo z weba. Použi Apple Shortcut webhook alebo manuálny paste.
+            iMessage nemôže byť čítaný priamo z weba. Použi Apple Shortcut webhook alebo manuálny
+            paste.
           </div>
           <BtnPrimary onClick={() => void handleAdd()} disabled={!raw.trim()}>
             <Wand2 className="h-4 w-4" /> Parsovať &amp; uložiť

@@ -14,9 +14,7 @@ export function PageHeader({
     <header className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:mb-6 sm:flex sm:items-center sm:justify-between">
       <div className="min-w-0">
         <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl">{title}</h1>
-        {description ? (
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-        ) : null}
+        {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
     </header>
@@ -57,13 +55,7 @@ export function StatusBadge({
   );
 }
 
-export function Card({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+export function Card({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <div
       className={cn(
@@ -97,16 +89,11 @@ export function StatCard({
             {label}
           </div>
           <div className="mt-1 truncate text-2xl font-semibold">{value}</div>
-          {hint ? (
-            <div className="mt-1 truncate text-xs text-muted-foreground">{hint}</div>
-          ) : null}
+          {hint ? <div className="mt-1 truncate text-xs text-muted-foreground">{hint}</div> : null}
         </div>
         {icon ? (
           <div
-            className={cn(
-              "grid h-9 w-9 shrink-0 place-items-center rounded-md",
-              toneClass[tone],
-            )}
+            className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-md", toneClass[tone])}
           >
             {icon}
           </div>
@@ -202,7 +189,12 @@ export function BtnGhost({
     );
   }
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={cn(cls, "disabled:opacity-50")}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(cls, "disabled:opacity-50")}
+    >
       {children}
     </button>
   );

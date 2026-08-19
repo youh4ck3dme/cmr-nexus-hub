@@ -5,13 +5,7 @@ import { Shield, Key, Database, Globe, Sun, Moon, Loader2, RefreshCw } from "luc
 import { useStore } from "@/lib/store";
 import { TRACKED_ENV_KEYS } from "@/lib/env-keys";
 import { getEnvStatus, type EnvStatusResult } from "@/lib/settings.functions";
-import {
-  BtnGhost,
-  Card,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Nastavenia · CMR Central" }] }),
@@ -19,8 +13,7 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
-  const { connectors, theme, setTheme, hydrated, dbReady, lastError, leads, projects } =
-    useStore();
+  const { connectors, theme, setTheme, hydrated, dbReady, lastError, leads, projects } = useStore();
   const fetchEnv = useServerFn(getEnvStatus);
   const [envStatus, setEnvStatus] = useState<EnvStatusResult | null>(null);
   const [envError, setEnvError] = useState<string | null>(null);
@@ -45,9 +38,7 @@ function SettingsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
-  const presentCount = envStatus
-    ? Object.values(envStatus.keys).filter(Boolean).length
-    : 0;
+  const presentCount = envStatus ? Object.values(envStatus.keys).filter(Boolean).length : 0;
 
   return (
     <div className="space-y-4">
@@ -124,11 +115,7 @@ function SettingsPage() {
               envStatus &&
               c.required_env.every((k) => envStatus.keys[k] || envStatus.keys[aliasOf(k)]);
             const displayStatus =
-              c.status === "connected"
-                ? "connected"
-                : envOk
-                  ? "mock"
-                  : "missing";
+              c.status === "connected" ? "connected" : envOk ? "mock" : "missing";
             return (
               <li
                 key={c.id}
@@ -202,8 +189,8 @@ function SettingsPage() {
           })}
         </ul>
         <div className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
-          Hodnoty sa nikdy nezobrazujú v UI. Stav overuje server function{" "}
-          <code>getEnvStatus</code> (authenticated).
+          Hodnoty sa nikdy nezobrazujú v UI. Stav overuje server function <code>getEnvStatus</code>{" "}
+          (authenticated).
         </div>
       </Card>
 
@@ -216,7 +203,9 @@ function SettingsPage() {
             <li>Konektor API volania idú vždy cez server (nie z prehliadača).</li>
             <li>Outreach je uložený ako draft – nikdy sa neodosiela automaticky.</li>
             <li>iMessage nie je priamo integrovaný – používaj Apple Shortcut webhook.</li>
-            <li>RLS je zapnuté; každý riadok je scoped na <code>owner_id = auth.uid()</code>.</li>
+            <li>
+              RLS je zapnuté; každý riadok je scoped na <code>owner_id = auth.uid()</code>.
+            </li>
           </ul>
         </div>
       </Card>
