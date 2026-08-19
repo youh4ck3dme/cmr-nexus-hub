@@ -44,45 +44,45 @@ function splitLeadBlocks(raw: string): string[] {
 
 function parseLeadBlock(block: string, reportId: string): Lead | null {
   const company =
-    extractMatch(block, /(?:Company|Firma|Spolo[čc]nos[ťt])\s*[:\-]\s*(.+)/i) ||
+    extractMatch(block, /(?:Company|Firma|Spolo[čc]nos[ťt])\s*[:-]\s*(.+)/i) ||
     extractMatch(block, /^(?:LEAD\s*\d+\s*[:\-—]\s*)(.+)$/im);
   if (!company) return null;
 
-  const website = extractMatch(block, /(?:Website|Web|URL)\s*[:\-]\s*(\S+)/i);
-  const email = extractMatch(block, /(?:Email|E-mail)\s*[:\-]\s*([^\s]+@[^\s]+)/i);
-  const phone = extractMatch(block, /(?:Phone|Tel|Telef[oó]n)\s*[:\-]\s*(\+?[\d\s().-]{6,})/i);
-  const country = extractMatch(block, /(?:Country|Krajina)\s*[:\-]\s*(.+)/i);
-  const location = extractMatch(block, /(?:Location|Lokalita|City|Mesto)\s*[:\-]\s*(.+)/i);
-  const size = extractMatch(block, /(?:Size|Company\s*Size|Ve[ľl]kos[ťt])\s*[:\-]\s*(.+)/i);
-  const category = extractMatch(block, /(?:Category|Kateg[oó]ria|Segment)\s*[:\-]\s*(.+)/i);
-  const problem = extractMatch(block, /(?:Problem|Evidence|Probl[eé]m)\s*[:\-]\s*(.+)/i);
+  const website = extractMatch(block, /(?:Website|Web|URL)\s*[:-]\s*(\S+)/i);
+  const email = extractMatch(block, /(?:Email|E-mail)\s*[:-]\s*([^\s]+@[^\s]+)/i);
+  const phone = extractMatch(block, /(?:Phone|Tel|Telef[oó]n)\s*[:-]\s*(\+?[\d\s().-]{6,})/i);
+  const country = extractMatch(block, /(?:Country|Krajina)\s*[:-]\s*(.+)/i);
+  const location = extractMatch(block, /(?:Location|Lokalita|City|Mesto)\s*[:-]\s*(.+)/i);
+  const size = extractMatch(block, /(?:Size|Company\s*Size|Ve[ľl]kos[ťt])\s*[:-]\s*(.+)/i);
+  const category = extractMatch(block, /(?:Category|Kateg[oó]ria|Segment)\s*[:-]\s*(.+)/i);
+  const problem = extractMatch(block, /(?:Problem|Evidence|Probl[eé]m)\s*[:-]\s*(.+)/i);
   const trigger = extractMatch(
     block,
-    /(?:Trigger|Trigger\s*Event|Spú[šs][ťt]a[čc])\s*[:\-]\s*(.+)/i,
+    /(?:Trigger|Trigger\s*Event|Spú[šs][ťt]a[čc])\s*[:-]\s*(.+)/i,
   );
-  const revenue = extractMatch(block, /(?:Revenue|Revenue\s*Impact|Dopad)\s*[:\-]\s*(.+)/i);
-  const contactUrl = extractMatch(block, /(?:Contact\s*URL|Kontakt\s*URL)\s*[:\-]\s*(\S+)/i);
+  const revenue = extractMatch(block, /(?:Revenue|Revenue\s*Impact|Dopad)\s*[:-]\s*(.+)/i);
+  const contactUrl = extractMatch(block, /(?:Contact\s*URL|Kontakt\s*URL)\s*[:-]\s*(\S+)/i);
 
-  const scoreMatch = block.match(/(?:Score|Sk[oó]re)\s*[:\-]\s*(\d+)\s*\/\s*(\d+)/i);
+  const scoreMatch = block.match(/(?:Score|Sk[oó]re)\s*[:-]\s*(\d+)\s*\/\s*(\d+)/i);
   const scoreTotal = scoreMatch ? Number(scoreMatch[1]) : 0;
   const scoreMax = scoreMatch ? Number(scoreMatch[2]) : 100;
   const label =
-    (extractMatch(block, /(?:Score\s*Label|Label)\s*[:\-]\s*(KEEP|BORDERLINE|REJECTED)/i) as
+    (extractMatch(block, /(?:Score\s*Label|Label)\s*[:-]\s*(KEEP|BORDERLINE|REJECTED)/i) as
       | ScoreLabel
       | undefined) ?? pickScoreLabel(scoreTotal, scoreMax);
 
   const dmMatch = block.match(
-    /(?:Decision\s*Makers?|Rozhodovate[ľl])\s*[:\-]\s*([\s\S]*?)(?:\n\s*\n|$)/i,
+    /(?:Decision\s*Makers?|Rozhodovate[ľl])\s*[:-]\s*([\s\S]*?)(?:\n\s*\n|$)/i,
   );
   const decision_makers = dmMatch
     ? dmMatch[1]
         .split(/\n|;/)
-        .map((s) => s.replace(/^[\s\-*•]+/, "").trim())
+        .map((s) => s.replace(/^[\s*•-]+/, "").trim())
         .filter(Boolean)
         .map((line) => {
           const li = line.match(/(https?:\/\/(?:www\.)?linkedin\.com\/\S+)/i);
           const cleaned = line.replace(li?.[0] ?? "", "").trim();
-          const [name, role] = cleaned.split(/\s*[—\-–]\s*/);
+          const [name, role] = cleaned.split(/\s*[—–-]\s*/);
           return {
             name: name || cleaned,
             role: role || undefined,
@@ -91,11 +91,11 @@ function parseLeadBlock(block: string, reportId: string): Lead | null {
         })
     : [];
 
-  const srcMatch = block.match(/(?:Sources?|Zdroje)\s*[:\-]\s*([\s\S]*?)(?:\n\s*\n|$)/i);
+  const srcMatch = block.match(/(?:Sources?|Zdroje)\s*[:-]\s*([\s\S]*?)(?:\n\s*\n|$)/i);
   const sources = srcMatch
     ? srcMatch[1]
         .split(/\n|;/)
-        .map((s) => s.replace(/^[\s\-*•]+/, "").trim())
+        .map((s) => s.replace(/^[\s*•-]+/, "").trim())
         .filter(Boolean)
         .map((line) => {
           const url = line.match(/(https?:\/\/\S+)/)?.[1];
@@ -103,10 +103,10 @@ function parseLeadBlock(block: string, reportId: string): Lead | null {
         })
     : [];
 
-  const emailSubject = extractMatch(block, /(?:Email\s*Subject|Predmet)\s*[:\-]\s*(.+)/i);
-  const emailBody = extractMatch(block, /(?:Email\s*Body|Telo)\s*[:\-]\s*([\s\S]+?)(?:\n\s*\n|$)/i);
-  const liMsg = extractMatch(block, /(?:LinkedIn\s*Message)\s*[:\-]\s*([\s\S]+?)(?:\n\s*\n|$)/i);
-  const followUpMsg = extractMatch(block, /(?:Follow[-\s]?up)\s*[:\-]\s*([\s\S]+?)(?:\n\s*\n|$)/i);
+  const emailSubject = extractMatch(block, /(?:Email\s*Subject|Predmet)\s*[:-]\s*(.+)/i);
+  const emailBody = extractMatch(block, /(?:Email\s*Body|Telo)\s*[:-]\s*([\s\S]+?)(?:\n\s*\n|$)/i);
+  const liMsg = extractMatch(block, /(?:LinkedIn\s*Message)\s*[:-]\s*([\s\S]+?)(?:\n\s*\n|$)/i);
+  const followUpMsg = extractMatch(block, /(?:Follow[-\s]?up)\s*[:-]\s*([\s\S]+?)(?:\n\s*\n|$)/i);
 
   const now = new Date().toISOString();
   const leadId = newId("lead");
