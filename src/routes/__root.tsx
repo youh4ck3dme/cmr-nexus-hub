@@ -97,16 +97,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "CMR Central – Centrálny operačný systém" },
       {
-        name: "description",
-        content:
-          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
-      },
-      {
-        property: "og:description",
-        content:
-          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
-      },
-      {
         name: "twitter:description",
         content:
           "Central Command Hub is a mobile-first web app for managing business operations from one place.",
