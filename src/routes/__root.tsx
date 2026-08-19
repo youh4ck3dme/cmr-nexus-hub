@@ -13,7 +13,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "../lib/store";
 import { AppShell } from "../components/app-shell";
 import { AuthProvider, useAuth } from "../lib/auth-context";
-import { useRouterState, Navigate, Outlet } from "@tanstack/react-router";
+import { useRouterState, Outlet, useNavigate } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -97,16 +97,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "CMR Central – Centrálny operačný systém" },
       {
-        name: "description",
-        content:
-          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
-      },
-      {
-        property: "og:description",
-        content:
-          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
-      },
-      {
         name: "twitter:description",
         content:
           "Central Command Hub is a mobile-first web app for managing business operations from one place.",
@@ -183,8 +173,20 @@ function RootComponent() {
 function AuthGate() {
   const { session, loading } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
 
-  if (loading) {
+  // Redirect in an effect, never during render: a render-phase router mutation
+  // can throw inside the root match during hydration.
+  useEffect(() => {
+    if (loading) return;
+    if (!session && pathname !== "/auth") {
+      void navigate({ to: "/auth", replace: true });
+    } else if (session && pathname === "/auth") {
+      void navigate({ to: "/dashboard", replace: true });
+    }
+  }, [loading, session, pathname, navigate]);
+
+  if (loading || (!session && pathname !== "/auth") || (session && pathname === "/auth")) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
         Načítavam…
@@ -192,12 +194,7 @@ function AuthGate() {
     );
   }
 
-  if (!session) {
-    if (pathname === "/auth") return <AppShellUnauthed />;
-    return <Navigate to="/auth" replace />;
-  }
-
-  if (pathname === "/auth") return <Navigate to="/dashboard" replace />;
+  if (!session) return <AppShellUnauthed />;
   return <AppShell />;
 }
 
