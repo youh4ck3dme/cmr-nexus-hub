@@ -316,9 +316,9 @@ function DashboardPage() {
         {metrics.missingConnectors.length > 0 && (
           <Card className="border-warning/30 bg-warning/5 p-4">
             <div className="text-sm">
-              <span className="font-semibold">Connectors:</span>{" "}
-              {metrics.missingConnectors.length} nie je v stave <code>connected</code>. Core CRM
-              beží na Supabase; sync konektory potrebujú server ENV.{" "}
+              <span className="font-semibold">Connectors:</span> {metrics.missingConnectors.length}{" "}
+              nie je v stave <code>connected</code>. Core CRM beží na Supabase; sync konektory
+              potrebujú server ENV.{" "}
               <Link to="/settings" className="underline">
                 Nastavenia
               </Link>

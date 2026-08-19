@@ -14,10 +14,8 @@ import type {
 } from "./types";
 
 const now = new Date().toISOString();
-const daysAgo = (n: number) =>
-  new Date(Date.now() - n * 86400000).toISOString();
-const daysAhead = (n: number) =>
-  new Date(Date.now() + n * 86400000).toISOString();
+const daysAgo = (n: number) => new Date(Date.now() - n * 86400000).toISOString();
+const daysAhead = (n: number) => new Date(Date.now() + n * 86400000).toISOString();
 
 export const demoClients: Client[] = [
   {
@@ -52,8 +50,7 @@ export const demoLeads: Lead[] = [
     score_max: 100,
     score_label: "KEEP",
     status: "new",
-    problem_evidence:
-      "Web bez online rezervačného systému, iba telefón. Slabá mobilná verzia.",
+    problem_evidence: "Web bez online rezervačného systému, iba telefón. Slabá mobilná verzia.",
     trigger_event: "Otvorenie 3 nových pobočiek za posledný kvartál.",
     revenue_impact: "£8k–£15k / mesiac dodatočný revenue z online booking.",
     email: "info@gouldbarbers.co.uk",
@@ -79,8 +76,7 @@ export const demoLeads: Lead[] = [
         lead_id: "lead_gould",
         channel: "email",
         subject: "Online booking pre Gould Barbers",
-        body:
-          "Dobrý deň John,\n\nvšimol som si, že Gould Barbers otvoril tri nové pobočky, ale rezervácie stále bežia iba cez telefón. Vieme dodať mobile-first booking do 3 týždňov.\n\n— Marek, Nexify Studio",
+        body: "Dobrý deň John,\n\nvšimol som si, že Gould Barbers otvoril tri nové pobočky, ale rezervácie stále bežia iba cez telefón. Vieme dodať mobile-first booking do 3 týždňov.\n\n— Marek, Nexify Studio",
         follow_up_day: 3,
         follow_up_message: "Krátky follow-up: máte 15 min tento týždeň?",
         is_sent: false,
@@ -193,8 +189,7 @@ export const demoReports: LeadReport[] = [
     average_keep_score: 88,
     keep_count: 3,
     rejected_count: 1,
-    conclusion:
-      "Silný deň – 3 KEEP leady, dominuje UK multi-location segment.",
+    conclusion: "Silný deň – 3 KEEP leady, dominuje UK multi-location segment.",
     raw_text: "DAILY LEAD REPORT 003 — (demo)",
     created_at: now,
   },
@@ -521,11 +516,7 @@ export const demoConnectors: Connector[] = [
     provider: "wordpress",
     status: "missing",
     config_summary: "Application password per site.",
-    required_env: [
-      "WORDPRESS_SITE_URL",
-      "WORDPRESS_USERNAME",
-      "WORDPRESS_APP_PASSWORD",
-    ],
+    required_env: ["WORDPRESS_SITE_URL", "WORDPRESS_USERNAME", "WORDPRESS_APP_PASSWORD"],
   },
   {
     id: "c_twilio",
@@ -533,11 +524,7 @@ export const demoConnectors: Connector[] = [
     provider: "twilio",
     status: "missing",
     config_summary: "SMS drafty len – žiadne auto-odosielanie.",
-    required_env: [
-      "TWILIO_ACCOUNT_SID",
-      "TWILIO_AUTH_TOKEN",
-      "TWILIO_FROM_NUMBER",
-    ],
+    required_env: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER"],
   },
   {
     id: "c_crm",

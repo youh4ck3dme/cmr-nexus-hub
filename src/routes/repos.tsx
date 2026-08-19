@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@/lib/store";
 import { syncRepos } from "@/lib/sync.functions";
-import {
-  BtnGhost,
-  Card,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/repos")({
   head: () => ({ meta: [{ title: "GitHub · CMR Central" }] }),
@@ -50,13 +44,12 @@ function ReposPage() {
           </BtnGhost>
         }
       />
-      {msg && (
-        <Card className="p-3 text-xs text-muted-foreground">{msg}</Card>
-      )}
+      {msg && <Card className="p-3 text-xs text-muted-foreground">{msg}</Card>}
       {gh && gh.status !== "connected" && (
         <Card className="border-warning/40 bg-warning/10 p-3 text-sm flex items-center justify-between gap-2">
           <div>
-            <b>Mock režim.</b> Doplň <code>GITHUB_TOKEN</code> na serverovej strane pre real-time dáta.
+            <b>Mock režim.</b> Doplň <code>GITHUB_TOKEN</code> na serverovej strane pre real-time
+            dáta.
           </div>
           <StatusBadge tone={statusTone(gh.status)}>{gh.status}</StatusBadge>
         </Card>

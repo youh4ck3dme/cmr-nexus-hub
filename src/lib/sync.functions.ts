@@ -217,10 +217,7 @@ export const syncWordPress = createServerFn({ method: "POST" })
       theme: null as string | null,
     };
 
-    await context.supabase
-      .from("wordpress_sites")
-      .delete()
-      .eq("owner_id", context.userId);
+    await context.supabase.from("wordpress_sites").delete().eq("owner_id", context.userId);
     const { error } = await context.supabase.from("wordpress_sites").insert(row);
     if (error) throw error;
     await logSync(context, "wordpress", "syncWordPress", `Synced site ${row.name}`);

@@ -4,7 +4,15 @@ import { createHmac } from "crypto";
 const OWNER = "00000000-0000-4000-8000-000000000000";
 
 test.describe("routes (HTTP/SSR)", () => {
-  for (const path of ["/", "/auth", "/dashboard", "/crm", "/settings", "/leads/import", "/messages"]) {
+  for (const path of [
+    "/",
+    "/auth",
+    "/dashboard",
+    "/crm",
+    "/settings",
+    "/leads/import",
+    "/messages",
+  ]) {
     test(`serves ${path}`, async ({ request }) => {
       const res = await request.get(path);
       expect(res.status(), path).toBeLessThan(400);

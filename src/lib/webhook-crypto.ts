@@ -9,11 +9,7 @@ export function hmacSha256Hex(secret: string, body: string): string {
  * Constant-time compare of hex signatures.
  * Returns false if lengths differ or either is empty.
  */
-export function verifyHmacSha256Hex(
-  secret: string,
-  body: string,
-  signature: string,
-): boolean {
+export function verifyHmacSha256Hex(secret: string, body: string, signature: string): boolean {
   if (!secret || !signature) return false;
   const expected = hmacSha256Hex(secret, body);
   const sig = Buffer.from(signature);

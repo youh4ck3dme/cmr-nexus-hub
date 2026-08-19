@@ -108,7 +108,10 @@ function stripId<T extends { id: string }>(row: T): Omit<T, "id"> {
   return rest;
 }
 
-function formatErr(prefix: string, error: { message?: string; code?: string; details?: string } | null) {
+function formatErr(
+  prefix: string,
+  error: { message?: string; code?: string; details?: string } | null,
+) {
   if (!error) return prefix;
   const bits = [prefix, error.message, error.code, error.details].filter(Boolean);
   return bits.join(" · ");
@@ -118,7 +121,10 @@ type Loaded = Omit<StoreState, "theme" | "hydrated" | "dbReady" | "lastError">;
 
 async function hydrate(userId: string): Promise<{ data: Loaded; error: string | null }> {
   const q = (t: string) =>
-    supabase.from(t as never).select("*").eq("owner_id", userId);
+    supabase
+      .from(t as never)
+      .select("*")
+      .eq("owner_id", userId);
 
   const results = await Promise.all([
     q("clients").order("created_at", { ascending: false }),
@@ -192,10 +198,7 @@ async function hydrate(userId: string): Promise<{ data: Loaded; error: string | 
 
 type InsertResult = { ok: boolean; error: string | null };
 
-async function insertMany(
-  table: string,
-  rows: Record<string, unknown>[],
-): Promise<InsertResult> {
+async function insertMany(table: string, rows: Record<string, unknown>[]): Promise<InsertResult> {
   if (rows.length === 0) return { ok: true, error: null };
   const { error } = await supabase.from(table as never).insert(rows as never);
   if (error) {
@@ -205,7 +208,10 @@ async function insertMany(
   return { ok: true, error: null };
 }
 
-async function seedIfEmpty(userId: string, loaded: Loaded): Promise<{ seeded: boolean; error: string | null }> {
+async function seedIfEmpty(
+  userId: string,
+  loaded: Loaded,
+): Promise<{ seeded: boolean; error: string | null }> {
   const total =
     loaded.leads.length +
     loaded.projects.length +
@@ -517,9 +523,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
       if (leads.length === 0) return;
 
-      const rows = leads.map((l) =>
-        asDbLead({ ...l, source_report_id: report.id }, userId),
-      );
+      const rows = leads.map((l) => asDbLead({ ...l, source_report_id: report.id }, userId));
       const { error: leadErr } = await supabase.from("leads").insert(rows as never);
       if (leadErr) {
         const msg = formatErr("import leads", leadErr);

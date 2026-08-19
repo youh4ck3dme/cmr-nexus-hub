@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@/lib/store";
 import { syncWordPress } from "@/lib/sync.functions";
-import {
-  BtnGhost,
-  Card,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/wordpress")({
   head: () => ({ meta: [{ title: "WordPress · CMR Central" }] }),
@@ -51,8 +45,8 @@ function WordPressPage() {
       {msg && <Card className="p-3 text-xs text-muted-foreground">{msg}</Card>}
       {wp && wp.status !== "connected" && (
         <Card className="border-warning/40 bg-warning/10 p-3 text-sm">
-          <b>Mock režim.</b> Nastav <code>WORDPRESS_SITE_URL</code>, <code>WORDPRESS_USERNAME</code>,{" "}
-          <code>WORDPRESS_APP_PASSWORD</code> pre real WP REST volania.
+          <b>Mock režim.</b> Nastav <code>WORDPRESS_SITE_URL</code>, <code>WORDPRESS_USERNAME</code>
+          , <code>WORDPRESS_APP_PASSWORD</code> pre real WP REST volania.
         </Card>
       )}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -81,9 +75,15 @@ function WordPressPage() {
               <BtnGhost as="a" href={w.site_url}>
                 <Globe className="h-4 w-4" /> Site
               </BtnGhost>
-              <BtnGhost><Puzzle className="h-4 w-4" /> Plugins</BtnGhost>
-              <BtnGhost><HardDrive className="h-4 w-4" /> Backups</BtnGhost>
-              <BtnGhost><Shield className="h-4 w-4" /> Security</BtnGhost>
+              <BtnGhost>
+                <Puzzle className="h-4 w-4" /> Plugins
+              </BtnGhost>
+              <BtnGhost>
+                <HardDrive className="h-4 w-4" /> Backups
+              </BtnGhost>
+              <BtnGhost>
+                <Shield className="h-4 w-4" /> Security
+              </BtnGhost>
             </div>
           </Card>
         ))}

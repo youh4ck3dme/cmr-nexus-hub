@@ -147,7 +147,12 @@ function LeadImportPage() {
           <BtnPrimary onClick={handlePreview} disabled={!raw.trim()}>
             <Inbox className="h-4 w-4" /> Parsovať preview
           </BtnPrimary>
-          <BtnGhost onClick={() => { setRaw(""); setPreview(null); }}>
+          <BtnGhost
+            onClick={() => {
+              setRaw("");
+              setPreview(null);
+            }}
+          >
             Vyčistiť
           </BtnGhost>
         </div>
@@ -238,7 +243,9 @@ function LeadImportPage() {
                 {l.warnings.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {l.warnings.map((w) => (
-                      <StatusBadge key={w} tone="warning">{w}</StatusBadge>
+                      <StatusBadge key={w} tone="warning">
+                        {w}
+                      </StatusBadge>
                     ))}
                   </div>
                 )}

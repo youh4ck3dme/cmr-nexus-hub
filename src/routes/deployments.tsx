@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@/lib/store";
 import { syncDeployments } from "@/lib/sync.functions";
-import {
-  BtnGhost,
-  Card,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/deployments")({
   head: () => ({ meta: [{ title: "Vercel · CMR Central" }] }),
@@ -62,7 +56,9 @@ function DeploymentsPage() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <Rocket className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span className="truncate text-sm font-semibold">{projectName(d.project_id)}</span>
+                  <span className="truncate text-sm font-semibold">
+                    {projectName(d.project_id)}
+                  </span>
                 </div>
                 <div className="mt-1 truncate text-xs text-muted-foreground">
                   {d.branch} · {d.commit_hash ?? "-"}
@@ -74,12 +70,28 @@ function DeploymentsPage() {
               <div className="truncate">
                 <span className="text-muted-foreground">Prod:</span>{" "}
                 {d.production_url ? (
-                  <a href={d.production_url} target="_blank" rel="noreferrer" className="text-primary underline">{d.production_url}</a>
-                ) : "—"}
+                  <a
+                    href={d.production_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary underline"
+                  >
+                    {d.production_url}
+                  </a>
+                ) : (
+                  "—"
+                )}
               </div>
               <div className="truncate">
                 <span className="text-muted-foreground">Preview:</span>{" "}
-                <a href={d.deployment_url} target="_blank" rel="noreferrer" className="text-primary underline">{d.deployment_url}</a>
+                <a
+                  href={d.deployment_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary underline"
+                >
+                  {d.deployment_url}
+                </a>
               </div>
             </div>
             <div className="mt-3">

@@ -1,13 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink, Github } from "lucide-react";
 import { useStore } from "@/lib/store";
-import {
-  BtnGhost,
-  Card,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 import { t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/projects")({
@@ -30,15 +24,19 @@ function ProjectsPage() {
                   {p.description}
                 </div>
               </div>
-              <StatusBadge tone={statusTone(p.status)}>
-                {t.projectStatus[p.status]}
-              </StatusBadge>
+              <StatusBadge tone={statusTone(p.status)}>{t.projectStatus[p.status]}</StatusBadge>
             </div>
             <div className="flex flex-wrap gap-1">
               {p.stack.map((s) => (
-                <StatusBadge key={s} tone="muted">{s}</StatusBadge>
+                <StatusBadge key={s} tone="muted">
+                  {s}
+                </StatusBadge>
               ))}
-              <StatusBadge tone={p.priority === "high" ? "error" : p.priority === "medium" ? "warning" : "muted"}>
+              <StatusBadge
+                tone={
+                  p.priority === "high" ? "error" : p.priority === "medium" ? "warning" : "muted"
+                }
+              >
                 {p.priority}
               </StatusBadge>
             </div>

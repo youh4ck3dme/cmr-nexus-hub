@@ -101,7 +101,10 @@ export function RobotParallax() {
       <div
         ref={cardRef}
         className="relative h-[38vh] min-h-[240px] w-full will-change-transform sm:h-[46vh] lg:h-[52vh]"
-        style={{ transformStyle: "preserve-3d", transition: reduced ? "none" : "transform 120ms linear" }}
+        style={{
+          transformStyle: "preserve-3d",
+          transition: reduced ? "none" : "transform 120ms linear",
+        }}
       >
         {/* Layer 1: blurred graffiti background */}
         <div
@@ -159,9 +162,7 @@ export function RobotParallax() {
           <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
             Nexify Studio
           </div>
-          <div className="text-2xl font-bold leading-tight text-white sm:text-3xl">
-            CMR Central
-          </div>
+          <div className="text-2xl font-bold leading-tight text-white sm:text-3xl">CMR Central</div>
           <div className="max-w-md text-xs text-white/70 sm:text-sm">
             Centrálny operačný systém – leady, projekty, deployments a konektory na jednom mieste.
           </div>
