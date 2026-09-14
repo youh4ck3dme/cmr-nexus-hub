@@ -9,71 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WordpressRouteImport } from './routes/wordpress'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ReposRouteImport } from './routes/repos'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as MessagesRouteImport } from './routes/messages'
-import { Route as LogsRouteImport } from './routes/logs'
-import { Route as DeploymentsRouteImport } from './routes/deployments'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as CrmRouteImport } from './routes/crm'
-import { Route as AutomationsRouteImport } from './routes/automations'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AutomationsRouteImport } from './routes/automations'
+import { Route as CrmRouteImport } from './routes/crm'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DeploymentsRouteImport } from './routes/deployments'
+import { Route as LogsRouteImport } from './routes/logs'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as ReposRouteImport } from './routes/repos'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as LeadsImportRouteImport } from './routes/leads.import'
-import { Route as ApiPublicHooksVercelRouteImport } from './routes/api/public/hooks/vercel'
-import { Route as ApiPublicHooksImessageRouteImport } from './routes/api/public/hooks/imessage'
 import { Route as ApiPublicHooksBase44RouteImport } from './routes/api/public/hooks/base44'
+import { Route as ApiPublicHooksImessageRouteImport } from './routes/api/public/hooks/imessage'
+import { Route as ApiPublicHooksVercelRouteImport } from './routes/api/public/hooks/vercel'
 
-const WordpressRoute = WordpressRouteImport.update({
-  id: '/wordpress',
-  path: '/wordpress',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReposRoute = ReposRouteImport.update({
-  id: '/repos',
-  path: '/repos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MessagesRoute = MessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LogsRoute = LogsRouteImport.update({
-  id: '/logs',
-  path: '/logs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DeploymentsRoute = DeploymentsRouteImport.update({
-  id: '/deployments',
-  path: '/deployments',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CrmRoute = CrmRouteImport.update({
-  id: '/crm',
-  path: '/crm',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AutomationsRoute = AutomationsRouteImport.update({
-  id: '/automations',
-  path: '/automations',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -81,9 +36,54 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AutomationsRoute = AutomationsRouteImport.update({
+  id: '/automations',
+  path: '/automations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrmRoute = CrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeploymentsRoute = DeploymentsRouteImport.update({
+  id: '/deployments',
+  path: '/deployments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogsRoute = LogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReposRoute = ReposRouteImport.update({
+  id: '/repos',
+  path: '/repos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WordpressRoute = WordpressRouteImport.update({
+  id: '/wordpress',
+  path: '/wordpress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeadsImportRoute = LeadsImportRouteImport.update({
@@ -91,9 +91,9 @@ const LeadsImportRoute = LeadsImportRouteImport.update({
   path: '/leads/import',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicHooksVercelRoute = ApiPublicHooksVercelRouteImport.update({
-  id: '/api/public/hooks/vercel',
-  path: '/api/public/hooks/vercel',
+const ApiPublicHooksBase44Route = ApiPublicHooksBase44RouteImport.update({
+  id: '/api/public/hooks/base44',
+  path: '/api/public/hooks/base44',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicHooksImessageRoute = ApiPublicHooksImessageRouteImport.update({
@@ -101,9 +101,9 @@ const ApiPublicHooksImessageRoute = ApiPublicHooksImessageRouteImport.update({
   path: '/api/public/hooks/imessage',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicHooksBase44Route = ApiPublicHooksBase44RouteImport.update({
-  id: '/api/public/hooks/base44',
-  path: '/api/public/hooks/base44',
+const ApiPublicHooksVercelRoute = ApiPublicHooksVercelRouteImport.update({
+  id: '/api/public/hooks/vercel',
+  path: '/api/public/hooks/vercel',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -240,74 +240,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wordpress': {
-      id: '/wordpress'
-      path: '/wordpress'
-      fullPath: '/wordpress'
-      preLoaderRoute: typeof WordpressRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/repos': {
-      id: '/repos'
-      path: '/repos'
-      fullPath: '/repos'
-      preLoaderRoute: typeof ReposRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/messages': {
-      id: '/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof MessagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/logs': {
-      id: '/logs'
-      path: '/logs'
-      fullPath: '/logs'
-      preLoaderRoute: typeof LogsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/deployments': {
-      id: '/deployments'
-      path: '/deployments'
-      fullPath: '/deployments'
-      preLoaderRoute: typeof DeploymentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/crm': {
-      id: '/crm'
-      path: '/crm'
-      fullPath: '/crm'
-      preLoaderRoute: typeof CrmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/automations': {
-      id: '/automations'
-      path: '/automations'
-      fullPath: '/automations'
-      preLoaderRoute: typeof AutomationsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -317,11 +254,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/automations': {
+      id: '/automations'
+      path: '/automations'
+      fullPath: '/automations'
+      preLoaderRoute: typeof AutomationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crm': {
+      id: '/crm'
+      path: '/crm'
+      fullPath: '/crm'
+      preLoaderRoute: typeof CrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/deployments': {
+      id: '/deployments'
+      path: '/deployments'
+      fullPath: '/deployments'
+      preLoaderRoute: typeof DeploymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logs': {
+      id: '/logs'
+      path: '/logs'
+      fullPath: '/logs'
+      preLoaderRoute: typeof LogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/repos': {
+      id: '/repos'
+      path: '/repos'
+      fullPath: '/repos'
+      preLoaderRoute: typeof ReposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wordpress': {
+      id: '/wordpress'
+      path: '/wordpress'
+      fullPath: '/wordpress'
+      preLoaderRoute: typeof WordpressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leads/import': {
@@ -331,11 +331,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsImportRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/hooks/vercel': {
-      id: '/api/public/hooks/vercel'
-      path: '/api/public/hooks/vercel'
-      fullPath: '/api/public/hooks/vercel'
-      preLoaderRoute: typeof ApiPublicHooksVercelRouteImport
+    '/api/public/hooks/base44': {
+      id: '/api/public/hooks/base44'
+      path: '/api/public/hooks/base44'
+      fullPath: '/api/public/hooks/base44'
+      preLoaderRoute: typeof ApiPublicHooksBase44RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/imessage': {
@@ -345,11 +345,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksImessageRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/hooks/base44': {
-      id: '/api/public/hooks/base44'
-      path: '/api/public/hooks/base44'
-      fullPath: '/api/public/hooks/base44'
-      preLoaderRoute: typeof ApiPublicHooksBase44RouteImport
+    '/api/public/hooks/vercel': {
+      id: '/api/public/hooks/vercel'
+      path: '/api/public/hooks/vercel'
+      fullPath: '/api/public/hooks/vercel'
+      preLoaderRoute: typeof ApiPublicHooksVercelRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

@@ -22,9 +22,11 @@ export default defineConfig({
   webServer: process.env.PLAYWRIGHT_SKIP_WEBSERVER
     ? undefined
     : {
-        command: "bun run dev",
+        command: process.env.npm_config_user_agent?.startsWith("bun")
+          ? "bun run dev"
+          : "npm run dev",
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: true,
         timeout: 120_000,
       },
 });

@@ -96,11 +96,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "CMR Central – Centrálny operačný systém" },
-      { name: "description", content: "Central Command Hub is a mobile-first web app for managing business operations from one place." },
-      { property: "og:description", content: "Central Command Hub is a mobile-first web app for managing business operations from one place." },
-      { name: "twitter:description", content: "Central Command Hub is a mobile-first web app for managing business operations from one place." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ffa1756-409f-4b7b-b729-86abef3334a2/id-preview-4767a2af--0fd7a491-77ef-4883-8960-b2da9a3f3325.lovable.app-1783025494056.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ffa1756-409f-4b7b-b729-86abef3334a2/id-preview-4767a2af--0fd7a491-77ef-4883-8960-b2da9a3f3325.lovable.app-1783025494056.png" },
+      {
+        name: "description",
+        content:
+          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
+      },
+      {
+        property: "og:description",
+        content:
+          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Central Command Hub is a mobile-first web app for managing business operations from one place.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ffa1756-409f-4b7b-b729-86abef3334a2/id-preview-4767a2af--0fd7a491-77ef-4883-8960-b2da9a3f3325.lovable.app-1783025494056.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ffa1756-409f-4b7b-b729-86abef3334a2/id-preview-4767a2af--0fd7a491-77ef-4883-8960-b2da9a3f3325.lovable.app-1783025494056.png",
+      },
       { name: "theme-color", content: "#16182a" },
       { name: "application-name", content: "CMR Central" },
       { name: "apple-mobile-web-app-capable", content: "yes" },

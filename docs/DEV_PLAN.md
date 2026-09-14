@@ -4,33 +4,33 @@ Stav k `2026-07-25`.
 
 ## Aktuálny stav
 
-| Oblast | Stav | Poznámka |
-| --- | --- | --- |
-| Supabase schema + RLS | ✅ | `supabase/migrations/` |
-| Auth gate | ✅ | email confirm môže blokovať signup E2E |
-| Hydrate/seed z DB | ✅ | `store.tsx` + follow-ups seed |
-| CRM / import / messages | ✅ | FK-safe import/convert |
-| Settings ENV presence | ✅ | `getEnvStatus` server-fn |
-| Settings DB truth | ✅ | live / error badge |
-| Dashboard metriky + follow-ups | ✅ | local “dnes”, panel, mark done |
-| GitHub sync kód | ✅ | `GITHUB_TOKEN` \| `GITHUB_API_KEY` + connector update |
-| GitHub sync live E2E | ✅ lokálne | direct `api.github.com` s `GITHUB_TOKEN`; Lovable gateway voliteľne s `LOVABLE_API_KEY` |
-| Base44 webhook HMAC | ✅ | `webhook-crypto` + DB map insert |
-| Base44 live E2E | ⏸ | treba `BASE44_WEBHOOK_SECRET` + service role |
-| Playwright | ✅ | `tests/unit-webhook.spec.ts` + `tests/smoke.spec.ts` |
+| Oblast                         | Stav       | Poznámka                                                                                |
+| ------------------------------ | ---------- | --------------------------------------------------------------------------------------- |
+| Supabase schema + RLS          | ✅         | `supabase/migrations/`                                                                  |
+| Auth gate                      | ✅         | email confirm môže blokovať signup E2E                                                  |
+| Hydrate/seed z DB              | ✅         | `store.tsx` + follow-ups seed                                                           |
+| CRM / import / messages        | ✅         | FK-safe import/convert                                                                  |
+| Settings ENV presence          | ✅         | `getEnvStatus` server-fn                                                                |
+| Settings DB truth              | ✅         | live / error badge                                                                      |
+| Dashboard metriky + follow-ups | ✅         | local “dnes”, panel, mark done                                                          |
+| GitHub sync kód                | ✅         | `GITHUB_TOKEN` \| `GITHUB_API_KEY` + connector update                                   |
+| GitHub sync live E2E           | ✅ lokálne | direct `api.github.com` s `GITHUB_TOKEN`; Lovable gateway voliteľne s `LOVABLE_API_KEY` |
+| Base44 webhook HMAC            | ✅         | `webhook-crypto` + DB map insert                                                        |
+| Base44 live E2E                | ⏸          | treba `BASE44_WEBHOOK_SECRET` + service role                                            |
+| Playwright                     | ✅         | `tests/unit-webhook.spec.ts` + `tests/smoke.spec.ts`                                    |
 
 ---
 
 ## Tasky
 
-| # | Task | Status |
-| --- | --- | --- |
-| 0 | E2E smoke + persistence | ✅ kód; auth confirm blokuje plný UI E2E |
-| 1 | Settings DB + server ENV | ✅ |
-| 2 | Follow-ups seed + dashboard | ✅ |
-| 3 | GitHub sync E2E | ✅ kód / ⏸ secrets |
-| 4 | Base44 webhook HMAC | ✅ kód / ⏸ secrets |
-| 5 | Playwright smoke | ✅ |
+| #   | Task                        | Status                                   |
+| --- | --------------------------- | ---------------------------------------- |
+| 0   | E2E smoke + persistence     | ✅ kód; auth confirm blokuje plný UI E2E |
+| 1   | Settings DB + server ENV    | ✅                                       |
+| 2   | Follow-ups seed + dashboard | ✅                                       |
+| 3   | GitHub sync E2E             | ✅ kód / ⏸ secrets                       |
+| 4   | Base44 webhook HMAC         | ✅ kód / ⏸ secrets                       |
+| 5   | Playwright smoke            | ✅                                       |
 
 ---
 

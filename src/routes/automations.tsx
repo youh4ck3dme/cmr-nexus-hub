@@ -2,13 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import type { ComponentType } from "react";
 import { useStore } from "@/lib/store";
-import {
-  BtnGhost,
-  Card,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/automations")({
   head: () => ({ meta: [{ title: "Automatizácie · CMR Central" }] }),
@@ -26,7 +20,7 @@ function AutomationsPage() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {automations.map((a) => {
           const Icon =
-            ((Icons as unknown) as Record<string, ComponentType<{ className?: string }>>)[a.icon] ??
+            (Icons as unknown as Record<string, ComponentType<{ className?: string }>>)[a.icon] ??
             Icons.Zap;
           return (
             <Card key={a.id} className="p-4 space-y-3">
@@ -37,14 +31,18 @@ function AutomationsPage() {
                   </div>
                   <div className="min-w-0">
                     <div className="truncate text-sm font-semibold">{a.name}</div>
-                    <div className="line-clamp-2 text-xs text-muted-foreground">{a.description}</div>
+                    <div className="line-clamp-2 text-xs text-muted-foreground">
+                      {a.description}
+                    </div>
                   </div>
                 </div>
                 <StatusBadge tone={statusTone(a.status)}>{a.status}</StatusBadge>
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-[11px] text-muted-foreground">
-                  {a.last_run ? `Naposledy: ${new Date(a.last_run).toLocaleString("sk-SK")}` : "Nespustené"}
+                  {a.last_run
+                    ? `Naposledy: ${new Date(a.last_run).toLocaleString("sk-SK")}`
+                    : "Nespustené"}
                 </div>
                 <BtnGhost onClick={() => void toggleAutomation(a.id)}>
                   {a.status === "enabled" ? "Vypnúť" : "Zapnúť"}

@@ -5,17 +5,17 @@ Prostredie: lokálny `bun run dev` (port **8080**), Supabase project `ziexgodsbp
 
 ## Čo prešlo
 
-| Check | Stav | Poznámka |
-| --- | --- | --- |
-| `bun install` | ✅ | |
-| Dev server štart | ✅ | `http://localhost:8080/` |
-| `bun run typecheck` | ✅ | |
-| `bun run build` | ✅ | |
-| Supabase URL + publishable key v `.env` | ✅ | |
-| Auth signup API | ✅ | User sa vytvorí |
-| Parser lead report (príklad v UI) | ✅ | 1 lead, UUID ids, dátum `YYYY-MM-DD` |
-| `normalizeDate("24/07/2026")` | ✅ | → `2026-07-24` |
-| Zavádzajúce „in-memory mock“ texty | ✅ opravené | Settings + AppShell |
+| Check                                   | Stav        | Poznámka                             |
+| --------------------------------------- | ----------- | ------------------------------------ |
+| `bun install`                           | ✅          |                                      |
+| Dev server štart                        | ✅          | `http://localhost:8080/`             |
+| `bun run typecheck`                     | ✅          |                                      |
+| `bun run build`                         | ✅          |                                      |
+| Supabase URL + publishable key v `.env` | ✅          |                                      |
+| Auth signup API                         | ✅          | User sa vytvorí                      |
+| Parser lead report (príklad v UI)       | ✅          | 1 lead, UUID ids, dátum `YYYY-MM-DD` |
+| `normalizeDate("24/07/2026")`           | ✅          | → `2026-07-24`                       |
+| Zavádzajúce „in-memory mock“ texty      | ✅ opravené | Settings + AppShell                  |
 
 ## Root cause fixes (kód)
 
@@ -44,13 +44,13 @@ Prostredie: lokálny `bun run dev` (port **8080**), Supabase project `ziexgodsbp
 
 ## Blokér E2E (auth)
 
-| Check | Stav | Poznámka |
-| --- | --- | --- |
-| Signup → okamžitý session | ❌ | Supabase vracia `confirmation_sent_at`, **bez `access_token`** |
-| Login pred confirm | ❌ | `error_code: email_not_confirmed` |
-| Dashboard seed po novom signup | ⏸ | Blokované confirm e-mailom |
-| Import → CRM persist refresh | ⏸ | Vyžaduje authenticated session |
-| Status change → refresh | ⏸ | Vyžaduje authenticated session |
+| Check                          | Stav | Poznámka                                                       |
+| ------------------------------ | ---- | -------------------------------------------------------------- |
+| Signup → okamžitý session      | ❌   | Supabase vracia `confirmation_sent_at`, **bez `access_token`** |
+| Login pred confirm             | ❌   | `error_code: email_not_confirmed`                              |
+| Dashboard seed po novom signup | ⏸    | Blokované confirm e-mailom                                     |
+| Import → CRM persist refresh   | ⏸    | Vyžaduje authenticated session                                 |
+| Status change → refresh        | ⏸    | Vyžaduje authenticated session                                 |
 
 **Príčina:** na Lovable Supabase projekte je zapnutá **email confirmation**. Bez `SUPABASE_SERVICE_ROLE_KEY` (v `.env` chýba; CLI `api-keys` → 403) nevieme usera admin-confirmnúť z agenta.
 
@@ -69,13 +69,13 @@ Prostredie: lokálny `bun run dev` (port **8080**), Supabase project `ziexgodsbp
 
 ## Tasks 1–5 (2026-07-25)
 
-| Task | Stav |
-| --- | --- |
-| 1 Settings ENV + DB | ✅ `getEnvStatus` server-fn, Settings UI, badges |
-| 2 Follow-ups + dashboard | ✅ seed follow-ups, metriky local-day, panel + mark done |
-| 3 GitHub sync | ✅ kód (`GITHUB_TOKEN`\|`API_KEY`, connector update); live ⏸ secrets |
-| 4 Base44 HMAC | ✅ `webhook-crypto` + DB map; live ⏸ secrets |
-| 5 Playwright | ✅ 9 passed / 2 skipped (secrets) |
+| Task                     | Stav                                                                 |
+| ------------------------ | -------------------------------------------------------------------- |
+| 1 Settings ENV + DB      | ✅ `getEnvStatus` server-fn, Settings UI, badges                     |
+| 2 Follow-ups + dashboard | ✅ seed follow-ups, metriky local-day, panel + mark done             |
+| 3 GitHub sync            | ✅ kód (`GITHUB_TOKEN`\|`API_KEY`, connector update); live ⏸ secrets |
+| 4 Base44 HMAC            | ✅ `webhook-crypto` + DB map; live ⏸ secrets                         |
+| 5 Playwright             | ✅ 9 passed / 2 skipped (secrets)                                    |
 
 ```bash
 bun run test:unit   # 5 passed
@@ -91,8 +91,8 @@ bun run test:e2e    # browser + webhook
 
 ## Done criteria (Task 0)
 
-- [x] Build OK  
-- [x] Root cause persistence fixes v store/import/messages  
-- [x] UI už neklaže o in-memory DB  
-- [x] Smoke notes  
+- [x] Build OK
+- [x] Root cause persistence fixes v store/import/messages
+- [x] UI už neklaže o in-memory DB
+- [x] Smoke notes
 - [ ] Plný UI E2E s novým userom — **blokované email confirm** (pozri vyššie)

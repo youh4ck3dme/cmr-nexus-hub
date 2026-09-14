@@ -2,13 +2,13 @@
 
 Interný hub pre **lead CRM**, projekty, GitHub/Vercel/WordPress konektory, iMessage intake a automatizácie.
 
-| Stack | |
-| --- | --- |
-| Framework | TanStack Start + React 19 + Vite 8 |
-| UI | Tailwind 4 + shadcn/Radix + lucide |
-| Data | Supabase (Postgres + Auth + RLS) |
+| Stack           |                                       |
+| --------------- | ------------------------------------- |
+| Framework       | TanStack Start + React 19 + Vite 8    |
+| UI              | Tailwind 4 + shadcn/Radix + lucide    |
+| Data            | Supabase (Postgres + Auth + RLS)      |
 | Package manager | **Bun** (preferovaný; funguje aj npm) |
-| Deploy target | Cloudflare (Nitro) / Lovable |
+| Deploy target   | Cloudflare (Nitro) / Lovable          |
 
 ---
 
@@ -29,13 +29,13 @@ App beží typicky na `http://localhost:3000` (alebo port, ktorý vypíše Vite)
 
 ### Skripty
 
-| Príkaz | Čo robí |
-| --- | --- |
-| `bun run dev` | lokálny dev server |
-| `bun run build` | produkčný build |
-| `bun run preview` | preview buildu |
-| `bun run lint` | ESLint |
-| `bun run format` | Prettier |
+| Príkaz            | Čo robí            |
+| ----------------- | ------------------ |
+| `bun run dev`     | lokálny dev server |
+| `bun run build`   | produkčný build    |
+| `bun run preview` | preview buildu     |
+| `bun run lint`    | ESLint             |
+| `bun run format`  | Prettier           |
 
 ---
 

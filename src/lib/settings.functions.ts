@@ -22,8 +22,7 @@ export const getEnvStatus = createServerFn({ method: "GET" })
     const keys = getEnvPresenceMap();
     const url = isEnvPresent("SUPABASE_URL") || isEnvPresent("VITE_SUPABASE_URL");
     const publishableKey =
-      isEnvPresent("SUPABASE_PUBLISHABLE_KEY") ||
-      isEnvPresent("VITE_SUPABASE_PUBLISHABLE_KEY");
+      isEnvPresent("SUPABASE_PUBLISHABLE_KEY") || isEnvPresent("VITE_SUPABASE_PUBLISHABLE_KEY");
     const serviceRole = isEnvPresent("SUPABASE_SERVICE_ROLE_KEY");
 
     return {

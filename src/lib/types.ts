@@ -1,12 +1,5 @@
 export type LeadStatus =
-  | "new"
-  | "approved"
-  | "rejected"
-  | "contacted"
-  | "follow_up_due"
-  | "replied"
-  | "won"
-  | "lost";
+  "new" | "approved" | "rejected" | "contacted" | "follow_up_due" | "replied" | "won" | "lost";
 
 export type ScoreLabel = "KEEP" | "BORDERLINE" | "REJECTED";
 
@@ -75,13 +68,7 @@ export interface LeadReport {
 }
 
 export type ProjectStatus =
-  | "idea"
-  | "planned"
-  | "active"
-  | "paused"
-  | "shipped"
-  | "maintenance"
-  | "archived";
+  "idea" | "planned" | "active" | "paused" | "shipped" | "maintenance" | "archived";
 
 export interface Project {
   id: string;

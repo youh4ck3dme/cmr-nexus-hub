@@ -44,11 +44,7 @@ export const Route = createFileRoute("/api/public/hooks/imessage")({
           .insert({
             owner_id: payload.owner_id,
             source: (payload.source ?? "imessage") as
-              | "imessage"
-              | "sms"
-              | "whatsapp"
-              | "email"
-              | "manual",
+              "imessage" | "sms" | "whatsapp" | "email" | "manual",
             raw_text: payload.raw_text,
             status: "new",
             ...parsed,

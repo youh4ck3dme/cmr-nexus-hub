@@ -1,4 +1,3 @@
-
 # Fázy B–G – realistický plán dodania
 
 Schéma DB + auth gate sú hotové (Fáza A). Fázy B–G predstavujú ~30 nových súborov, 3 externé API integrácie, verejné webhooky s HMAC, pg_cron a end-to-end verifikáciu. **Poctivo sa nedá dodať kvalitne v jednom ťahu bez regresií.** Navrhujem dodať v štyroch po sebe idúcich runoch, každý overený build-om a Playwrightom pred pokračovaním.
@@ -8,12 +7,14 @@ Schéma DB + auth gate sú hotové (Fáza A). Fázy B–G predstavujú ~30 nový
 ## Run 1 — Fáza B (fundament, blokuje všetko ostatné)
 
 **Nové súbory:**
+
 - `src/lib/queries.ts` — `queryOptions` factory pre všetky domény
 - `src/lib/leads.functions.ts` — list/create/update/import + `ensureSeed`
 - `src/lib/projects.functions.ts` — projects + repos + deployments + wordpress + clients (jeden súbor, menej boilerplate)
 - `src/lib/messages.functions.ts` — messages + automations + logs + connectors
 
 **Zmenené:**
+
 - `src/lib/store.tsx` — zostane len UI stav (`theme`); dátové API sa presunie do Query hookov `useLeads()`, `useProjects()` atď., ktoré interne volajú `useSuspenseQuery`
 - 11× `src/routes/*.tsx` — nahradiť `useStore().leads` za `useLeads()` atď.
 - `src/start.ts` — pridať `attachSupabaseAuth` middleware
@@ -27,11 +28,13 @@ Schéma DB + auth gate sú hotové (Fáza A). Fázy B–G predstavujú ~30 nový
 ## Run 2 — Fázy C + D (konektory + webhooky)
 
 **Konektory:**
+
 - `standard_connectors--connect` pre `github`, `vercel`, `wordpress`
 - `src/lib/sync.functions.ts` — `syncRepos()`, `syncDeployments()`, `syncWordPress()` cez konektor gateway
 - UI buttony „Sync now" v `/repos`, `/deployments`, `/wordpress`
 
 **Webhooky (verejné, HMAC verified):**
+
 - `src/routes/api/public/hooks/base44.ts` — prijme report, parsuje, insert do `lead_reports` + `leads`
 - `src/routes/api/public/hooks/imessage.ts` — Apple Shortcut, `Bearer` token auth, insert do `message_intakes`
 - `src/routes/api/public/hooks/vercel.ts` — deployment events → update `deployments`
@@ -54,11 +57,13 @@ Schéma DB + auth gate sú hotové (Fáza A). Fázy B–G predstavujú ~30 nový
 ## Run 4 — Fázy F + G (SEO + verifikácia)
 
 **Fáza F:**
+
 - Vlastný `head()` pre každú leaf route (`/dashboard`, `/crm`, `/projects`, `/repos`, `/deployments`, `/wordpress`, `/messages`, `/automations`, `/logs`, `/settings`, `/leads/import`) s unique `title` + `description` + `og:*` + `twitter:card`
 - `security--run_security_scan` → oprava findings
 - `mem://index.md` + `mem://features/auth`, `mem://features/connectors`
 
 **Fáza G — Playwright:**
+
 - signup → dashboard (seed viditeľný)
 - `/leads/import` paste Base44 raw → save → objaví sa v `/crm` po reload
 - toggle automation → `/logs` zapíše záznam

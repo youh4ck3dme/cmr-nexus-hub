@@ -1,12 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@/lib/store";
-import {
-  Card,
-  EmptyState,
-  PageHeader,
-  StatusBadge,
-  statusTone,
-} from "@/components/ui-bits";
+import { Card, EmptyState, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/logs")({
   head: () => ({ meta: [{ title: "Logy · CMR Central" }] }),
@@ -24,7 +18,10 @@ function LogsPage() {
         <Card>
           <ul className="divide-y divide-border">
             {logs.map((l) => (
-              <li key={l.id} className="grid gap-1 px-4 py-3 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-3">
+              <li
+                key={l.id}
+                className="grid gap-1 px-4 py-3 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-3"
+              >
                 <StatusBadge tone={statusTone(l.status)}>{l.status}</StatusBadge>
                 <div className="min-w-0">
                   <div className="truncate text-sm font-medium">

@@ -112,7 +112,8 @@ function AuthPage() {
         </BtnGhost>
 
         <div className="flex items-center gap-3 text-[11px] uppercase text-muted-foreground">
-          <div className="h-px flex-1 bg-border" /> alebo e-mail <div className="h-px flex-1 bg-border" />
+          <div className="h-px flex-1 bg-border" /> alebo e-mail{" "}
+          <div className="h-px flex-1 bg-border" />
         </div>
 
         <form onSubmit={submit} className="space-y-3">
