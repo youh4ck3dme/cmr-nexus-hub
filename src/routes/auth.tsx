@@ -73,14 +73,44 @@ function AuthPage() {
     }
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const err =
+        params.get("error_description") ||
+        params.get("error") ||
+        hashParams.get("error_description") ||
+        hashParams.get("error");
+      if (err) {
+        setError(decodeURIComponent(err.replace(/\+/g, " ")));
+      }
+    }
+  }, []);
+
   const signInGoogle = async () => {
     setBusy(true);
     setError(null);
     try {
-      const res = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (res.error) throw res.error instanceof Error ? res.error : new Error(String(res.error));
+      const isLovable =
+        typeof window !== "undefined" &&
+        (window.location.hostname.endsWith("lovable.app") ||
+          window.location.hostname.endsWith("lovableproject.com"));
+
+      if (isLovable) {
+        const res = await lovable.auth.signInWithOAuth("google", {
+          redirect_uri: window.location.origin,
+        });
+        if (res.error) throw res.error instanceof Error ? res.error : new Error(String(res.error));
+      } else {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/auth`,
+          },
+        });
+        if (error) throw error;
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setBusy(false);
