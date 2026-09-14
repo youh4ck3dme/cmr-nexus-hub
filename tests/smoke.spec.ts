@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { createHmac } from "crypto";
 
-const OWNER = "00000000-0000-4000-8000-000000000000";
+// Real auth user in this project — webhook inserts have an owner_id FK to auth.users,
+// so a synthetic UUID would make every insert fail with a false-green 500.
+const OWNER = "42df981f-3780-471a-992c-8fd12bd17ed7";
 
 test.describe("routes (HTTP/SSR)", () => {
   for (const path of [
@@ -81,7 +83,7 @@ Email: play@example.com
       headers: { "content-type": "application/json", "x-base44-signature": sig },
       data: body,
     });
-    expect([200, 500]).toContain(res.status());
+    expect(res.status(), await res.text()).toBe(200);
   });
 
   test("dedupes retried delivery with same event id", async ({ request }) => {
@@ -106,7 +108,7 @@ Score Label: KEEP
       "x-base44-event-id": eventId,
     };
     const first = await request.post("/api/public/hooks/base44", { headers, data: body });
-    test.skip(first.status() !== 200, "first delivery did not succeed");
+    expect(first.status(), await first.text()).toBe(200);
     const firstJson = await first.json();
 
     const second = await request.post("/api/public/hooks/base44", { headers, data: body });
