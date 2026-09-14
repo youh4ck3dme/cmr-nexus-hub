@@ -3,15 +3,8 @@ import { useMemo, useState } from "react";
 import { Search, Mail, Phone, ExternalLink, X } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
-import {
-  BtnGhost,
-  Card,
-  EmptyState,
-  PageHeader,
-  StatusBadge,
-  scoreLabelTone,
-  statusTone,
-} from "@/components/ui-bits";
+import { BtnGhost, Card, EmptyState, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { scoreLabelTone, statusTone } from "@/lib/tones";
 import type { Lead, LeadStatus, ScoreLabel } from "@/lib/types";
 
 export const Route = createFileRoute("/crm")({

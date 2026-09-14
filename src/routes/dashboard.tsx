@@ -22,9 +22,8 @@ import {
   StatusBadge,
   BtnPrimary,
   BtnGhost,
-  statusTone,
-  scoreLabelTone,
 } from "@/components/ui-bits";
+import { statusTone, scoreLabelTone } from "@/lib/tones";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({

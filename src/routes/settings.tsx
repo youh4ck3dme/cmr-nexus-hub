@@ -5,7 +5,8 @@ import { Shield, Key, Database, Globe, Sun, Moon, Loader2, RefreshCw } from "luc
 import { useStore } from "@/lib/store";
 import { TRACKED_ENV_KEYS } from "@/lib/env-keys";
 import { getEnvStatus, type EnvStatusResult } from "@/lib/settings.functions";
-import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { statusTone } from "@/lib/tones";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Nastavenia · CMR Central" }] }),

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@/lib/store";
 import { syncDeployments } from "@/lib/sync.functions";
-import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { statusTone } from "@/lib/tones";
 
 export const Route = createFileRoute("/deployments")({
   head: () => ({ meta: [{ title: "Vercel · CMR Central" }] }),

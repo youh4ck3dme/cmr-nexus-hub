@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@/lib/store";
-import { Card, EmptyState, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
+import { Card, EmptyState, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { statusTone } from "@/lib/tones";
 
 export const Route = createFileRoute("/logs")({
   head: () => ({ meta: [{ title: "Logy · CMR Central" }] }),

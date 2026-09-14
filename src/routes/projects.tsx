@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink, Github } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { statusTone } from "@/lib/tones";
 import { t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/projects")({

@@ -39,9 +39,6 @@ import type {
 } from "./types";
 import { asDbLead, asDbReport, isUuid, normalizeDate } from "./db-map";
 
-// Re-export for existing importers
-export { normalizeDate } from "./db-map";
-
 interface StoreState {
   clients: Client[];
   leads: Lead[];

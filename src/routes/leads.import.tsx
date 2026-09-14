@@ -3,14 +3,8 @@ import { useState } from "react";
 import { AlertTriangle, CheckCircle2, Inbox, FileText } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { parseLeadReport, type ParsedReportPreview } from "@/lib/parsers";
-import {
-  BtnGhost,
-  BtnPrimary,
-  Card,
-  PageHeader,
-  StatusBadge,
-  scoreLabelTone,
-} from "@/components/ui-bits";
+import { BtnGhost, BtnPrimary, Card, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { scoreLabelTone } from "@/lib/tones";
 import type { Lead, LeadReport } from "@/lib/types";
 import { newId } from "@/lib/store";
 
@@ -141,7 +135,7 @@ function LeadImportPage() {
           value={raw}
           onChange={(e) => setRaw(e.target.value)}
           placeholder="Sem prilep celý denný lead report…"
-          className="min-h-[220px] w-full resize-y rounded-md border border-border bg-background p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
+          className="min-h-55 w-full resize-y rounded-md border border-border bg-background p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
         />
         <div className="flex flex-wrap gap-2">
           <BtnPrimary onClick={handlePreview} disabled={!raw.trim()}>

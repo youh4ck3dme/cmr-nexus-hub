@@ -10,8 +10,8 @@ import {
   EmptyState,
   PageHeader,
   StatusBadge,
-  statusTone,
 } from "@/components/ui-bits";
+import { statusTone } from "@/lib/tones";
 import type { MessageIntake } from "@/lib/types";
 
 export const Route = createFileRoute("/messages")({
@@ -88,7 +88,7 @@ function MessagesPage() {
             value={raw}
             onChange={(e) => setRaw(e.target.value)}
             placeholder="Sem prilep iMessage / SMS / WhatsApp / email…"
-            className="min-h-[120px] w-full resize-y rounded-md border border-border bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="min-h-30 w-full resize-y rounded-md border border-border bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">

@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import type { ComponentType } from "react";
 import { useStore } from "@/lib/store";
-import { BtnGhost, Card, PageHeader, StatusBadge, statusTone } from "@/components/ui-bits";
+import { BtnGhost, Card, PageHeader, StatusBadge } from "@/components/ui-bits";
+import { statusTone } from "@/lib/tones";
 
 export const Route = createFileRoute("/automations")({
   head: () => ({ meta: [{ title: "Automatizácie · CMR Central" }] }),
